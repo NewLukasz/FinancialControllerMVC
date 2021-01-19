@@ -6,25 +6,45 @@
 
     <h1>Log in</h1>
 
-    <form action="/login/create" method="post">
+    <form class="loginAndRegisterForm" action="/login/create" method="post">
 
-        <div>
-            <label for="inputEmail">Email address</label>
-            <input type="email" id="inputEmail" name="email" placeholder="Email address" autofocus value="{{ email }}" />
-        </div>
-        <div>
-            <label for="inputPassword">Password</label>
-            <input type="password" id="inputPassword" name="password" placeholder="Password" />
-        </div>
-        <div>
-            <label>
-                <input type="checkbox" name="remember_me" {% if remember_me %} checked="checked"{% endif %} /> Remember me
-            </label>
+        <div class="form-group"></div>
+            <label for="inputEmail">Type your email adress:</label>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="icon-mail-alt"></i></span>
+                </div>
+                <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" autofocus value="{{ email }}" aria-label="Email">
+            </div>
         </div>
 
-        <button type="submit">Log in</button>
-        <a href="/password/forgot">Forgot password?</a>
+        <div class="form-group">
+            <label for="inputPassword">Type your password:</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon-lock"></i></span>
+              </div>
+              <input name="password" id="inputPassword" type="password" class="form-control" placeholder="Password" aria-label="Password">
+            </div>
+        </div>
 
+
+
+
+
+
+
+        <div>
+            
+            <div>
+                <label>
+                    <input type="checkbox" name="remember_me" {% if remember_me %} checked="checked"{% endif %} /> Remember me
+                </label>
+            </div>
+
+            <button type="submit">Log in</button>
+            <a href="/password/forgot">Forgot password?</a>
+        </div>
     </form>
 
 {% endblock %}
