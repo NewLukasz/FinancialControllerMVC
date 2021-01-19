@@ -29,20 +29,23 @@
         </div>
 
 
-
+        <div>
+            <label>
+                <input type="checkbox" name="remember_me" {% if remember_me %} checked="checked"{% endif %} /> Remember me
+            </label>
+        </div>
 
 
 
 
         <div>
             
-            <div>
-                <label>
-                    <input type="checkbox" name="remember_me" {% if remember_me %} checked="checked"{% endif %} /> Remember me
-                </label>
-            </div>
+            
 
-            <button type="submit">Log in</button>
+            <button type="submit" class="btn btn-primary btn-block mt-2">Log in</button>
+            
+        </div>
+        <div>
             <a href="/password/forgot">Forgot password?</a>
         </div>
     </form>
