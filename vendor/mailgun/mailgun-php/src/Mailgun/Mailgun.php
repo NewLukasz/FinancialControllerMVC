@@ -2,12 +2,11 @@
 
 namespace Mailgun;
 
-use Http\Client\HttpClient;
-use Mailgun\Connection\RestClient;
 use Mailgun\Constants\ExceptionMessages;
-use Mailgun\Lists\OptInHandler;
-use Mailgun\Messages\BatchMessage;
 use Mailgun\Messages\Exceptions;
+use Mailgun\Connection\RestClient;
+use Mailgun\Messages\BatchMessage;
+use Mailgun\Lists\OptInHandler;
 use Mailgun\Messages\MessageBuilder;
 
 /**
@@ -16,8 +15,8 @@ use Mailgun\Messages\MessageBuilder;
  *
  * @link https://github.com/mailgun/mailgun-php/blob/master/README.md
  */
-class Mailgun
-{
+class Mailgun{
+
     /**
      * @var RestClient
      */
@@ -30,16 +29,13 @@ class Mailgun
 
     /**
      * @param string|null $apiKey
-     * @param HttpClient  $httpClient
-     * @param string      $apiEndpoint
+     * @param string $apiEndpoint
+     * @param string $apiVersion
+     * @param bool $ssl
      */
-    public function __construct(
-        $apiKey = null,
-        HttpClient $httpClient = null,
-        $apiEndpoint = 'api.mailgun.net'
-    ) {
+    public function __construct($apiKey = null, $apiEndpoint = "api.mailgun.net", $apiVersion = "v3", $ssl = true){
         $this->apiKey = $apiKey;
-        $this->restClient = new RestClient($apiKey, $apiEndpoint, $httpClient);
+        $this->restClient = new RestClient($apiKey, $apiEndpoint, $apiVersion, $ssl);
     }
 
     /**
@@ -48,28 +44,26 @@ class Mailgun
      *  position of the function call.
      *
      * @param string $workingDomain
-     * @param array  $postData
-     * @param array  $postFiles
-     *
+     * @param array $postData
+     * @param array $postFiles
      * @throws Exceptions\MissingRequiredMIMEParameters
-     *
-     * @return \stdClass
      */
-    public function sendMessage($workingDomain, $postData, $postFiles = [])
-    {
-        if (is_array($postFiles)) {
+    public function sendMessage($workingDomain, $postData, $postFiles = array()){
+        if(is_array($postFiles)){
             return $this->post("$workingDomain/messages", $postData, $postFiles);
-        } elseif (is_string($postFiles)) {
-            $tempFile = tempnam(sys_get_temp_dir(), 'MG_TMP_MIME');
-            $fileHandle = fopen($tempFile, 'w');
+        }
+        else if(is_string($postFiles)){
+
+            $tempFile = tempnam(sys_get_temp_dir(), "MG_TMP_MIME");
+            $fileHandle = fopen($tempFile, "w");
             fwrite($fileHandle, $postFiles);
 
-            $result = $this->post("$workingDomain/messages.mime", $postData, ['message' => $tempFile]);
+            $result = $this->post("$workingDomain/messages.mime", $postData, array("message" => $tempFile));
             fclose($fileHandle);
             unlink($tempFile);
-
             return $result;
-        } else {
+        }
+        else{
             throw new Exceptions\MissingRequiredMIMEParameters(ExceptionMessages::EXCEPTION_MISSING_REQUIRED_MIME_PARAMETERS);
         }
     }
@@ -85,119 +79,79 @@ class Mailgun
      * You should reject the request with status code 403 Forbidden.
      *
      * @param array|null $postData
-     *
      * @return bool
      */
-    public function verifyWebhookSignature($postData = null)
-    {
-        if ($postData === null) {
+    public function verifyWebhookSignature($postData = NULL) {
+        if(is_null($postData)) {
             $postData = $_POST;
         }
-        if (!isset($postData['timestamp']) || !isset($postData['token']) || !isset($postData['signature'])) {
-            return false;
-        }
-        $hmac = hash_hmac('sha256', "{$postData['timestamp']}{$postData['token']}", $this->apiKey);
+        $hmac = hash_hmac('sha256', "{$postData["timestamp"]}{$postData["token"]}", $this->apiKey);
         $sig = $postData['signature'];
-        if (function_exists('hash_equals')) {
+        if(function_exists('hash_equals')) {
             // hash_equals is constant time, but will not be introduced until PHP 5.6
             return hash_equals($hmac, $sig);
-        } else {
-            return $hmac === $sig;
+        }
+        else {
+            return ($hmac == $sig);
         }
     }
 
     /**
      * @param string $endpointUrl
-     * @param array  $postData
-     * @param array  $files
-     *
+     * @param array $postData
+     * @param array $files
      * @return \stdClass
      */
-    public function post($endpointUrl, $postData = [], $files = [])
-    {
+    public function post($endpointUrl, $postData = array(), $files = array()){
         return $this->restClient->post($endpointUrl, $postData, $files);
     }
 
     /**
      * @param string $endpointUrl
-     * @param array  $queryString
-     *
+     * @param array $queryString
      * @return \stdClass
      */
-    public function get($endpointUrl, $queryString = [])
-    {
+    public function get($endpointUrl, $queryString = array()){
         return $this->restClient->get($endpointUrl, $queryString);
     }
 
     /**
      * @param string $endpointUrl
-     *
      * @return \stdClass
      */
-    public function delete($endpointUrl)
-    {
+    public function delete($endpointUrl){
         return $this->restClient->delete($endpointUrl);
     }
 
     /**
      * @param string $endpointUrl
-     * @param array  $putData
-     *
+     * @param array $putData
      * @return \stdClass
      */
-    public function put($endpointUrl, $putData)
-    {
+    public function put($endpointUrl, $putData){
         return $this->restClient->put($endpointUrl, $putData);
-    }
-
-    /**
-     * @param string $apiVersion
-     *
-     * @return Mailgun
-     */
-    public function setApiVersion($apiVersion)
-    {
-        $this->restClient->setApiVersion($apiVersion);
-
-        return $this;
-    }
-
-    /**
-     * @param bool $sslEnabled
-     *
-     * @return Mailgun
-     */
-    public function setSslEnabled($sslEnabled)
-    {
-        $this->restClient->setSslEnabled($sslEnabled);
-
-        return $this;
     }
 
     /**
      * @return MessageBuilder
      */
-    public function MessageBuilder()
-    {
+    public function MessageBuilder(){
         return new MessageBuilder();
     }
 
     /**
      * @return OptInHandler
      */
-    public function OptInHandler()
-    {
+    public function OptInHandler(){
         return new OptInHandler();
     }
 
     /**
      * @param string $workingDomain
-     * @param bool   $autoSend
-     *
+     * @param bool $autoSend
      * @return BatchMessage
      */
-    public function BatchMessage($workingDomain, $autoSend = true)
-    {
+    public function BatchMessage($workingDomain, $autoSend = true){
         return new BatchMessage($this->restClient, $workingDomain, $autoSend);
     }
 }
