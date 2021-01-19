@@ -34,7 +34,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="dashboard.php"><i class="icon-home"></i>Main page</a>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item ">
                     <a class="nav-link" href="addIncome.php"><i class="icon-dollar"></i>Add income</a>
                 </li>
                 <li class="nav-item">
@@ -57,11 +57,11 @@
     <nav class="navbar navbar-dark bg-navbar">
         <ul class="navbar-nav mx-auto">
             <ul class="list-inline">
-                <li class="nav-item list-inline-item ">
-                    <a class="nav-link" href="/login"> Login </a>
+                <li class="nav-item list-inline-item">
+                    <a {%if current_page=="login" %} class="nav-link active" {%else%} class="nav-link" {%endif%}  href="/login" >Login</a>
                 </li>
                 <li class="nav-item list-inline-item">
-                    <a class="nav-link" href="/signup/new"> Register </a>
+                    <a {%if current_page=="signup/new" %} class="nav-link active" {%else%} class="nav-link" {%endif%} href="/signup/new"> Register </a>
                 </li>
             </ul>
         </ul>
