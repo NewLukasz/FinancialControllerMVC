@@ -3,10 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/main.css"/>
+
+    <meta name="description" content="Financial Controller is a web application which help you to control your money flow and show on which target you spend most of you money. By this way you can make an aware decision that you follow the right way.">
+	<meta name="keywords" content="money, cash, saving, control, finance, financial, spend, balance, month balance, year balance">
+    <meta name="author" content="Lukasz Kilijanski">
+    <meta http-equiv="X-Ua-Compatible" content="IE=edge,chrome=1">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/fontello.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
 </head>
 <body>
-
+    <div id="logo">
+        <a href="index.php"><img class="img-fluid my-3 d-block mx-auto" src="images/logo.png"></a>
+    </div>
+    {% if current_user %}
+    <nav class="navbar navbar-dark bg-navbar navbar-expand-lg">
+		
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <div class="collapse navbar-collapse" id="mainmenu">
+        
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="dashboard.php"><i class="icon-home"></i>Main page</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="addIncome.php"><i class="icon-dollar"></i>Add income</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="addExpense.php"><i class="icon-basket"></i>Add expense</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="showBalance.php"><i class="icon-chart-pie"></i>Balance</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="icon-wrench"></i>Settings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="logout.php"><i class="icon-logout"></i>Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    {% endif %}
+    {% if not current_user %}
+    <nav class="navbar navbar-dark bg-navbar">
+        <ul class="navbar-nav mx-auto">
+            <ul class="list-inline">
+                <li class="nav-item list-inline-item ">
+                    <a class="nav-link" href="login.php"> Login </a>
+                </li>
+                <li class="nav-item list-inline-item">
+                    <a class="nav-link" href="register.php"> Register </a>
+                </li>
+            </ul>
+        </ul>
+    </nav>
+    {% endif %}
+    </nav>
     <nav>
         <ul>
             <li><a href="/">Home</a></li>
@@ -25,7 +85,7 @@
 
     {% block body %}
     {% endblock %}
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
 
