@@ -81,3 +81,13 @@ footer
 }
 
 .ui-datepicker { position: relative; z-index: 10000 !important; }
+
+.input-group-text
+{
+	border-radius: 5px 0px 0px 5px;
+}
+
+.form-control
+{
+	border-radius: 0px 10px 10px 0px;
+}
