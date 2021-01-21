@@ -2,6 +2,13 @@
 
 {% block title %}Add income{% endblock %}
 
+{% block footer %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="/js/calendar.js"></script>
+{%endblock%}
+
 {% block body %}
 
 <form class="financialMovementsForm" action="addIncomeProcess.php" method="post">
@@ -24,9 +31,7 @@
           <div class="input-group-prepend">
             <span class="input-group-text"><i class="icon-calendar"></i></span>
           </div>
-          <input  name="dateOfIncome" type="text" class="form-control" aria-label="Date" 
-          
-          >
+          <input id="datePicker"  name="dateOfIncome" type="text" class="form-control" aria-label="Date" >
           
         </div>
         
