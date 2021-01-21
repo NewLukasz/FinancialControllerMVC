@@ -45,6 +45,7 @@ footer
 .btn-primary
 {
 	background-color: #0C44CD;
+	width: 100%;
 }
 
 @media (max-width: 636px){
