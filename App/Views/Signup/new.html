@@ -3,63 +3,62 @@
 {% block title %}Sign up{% endblock %}
 
 {% block footer %}
+  
+
   <link rel="stylesheet" href="/css/showHidePassword.wink.css">
 
   <script src="/js/hideShowPassword.min.js"></script>
   <script src="/js/app.js"></script>
 
-    <script>
-        $(document).ready(function() {
-
-            /**
-             * Validate the form
-             */
-            $('#formSignup').validate({
-                rules: {
-                    name: 'required',
-                    email: {
-                        required: true,
-                        email: true,
-                        remote: '/account/validate-email'
-                    },
-                    password: {
-                        required: true,
-                        minlength: 6,
-                        validPassword: true
-                    }
-                },
-                messages: {
-                    email: {
-                        remote: 'email already taken'
-                    }
-                }
-            });
-
-
-            /**
-              * Show password toggle button
-              */
-            $('#inputPassword').hideShowPassword({
-                show: false,
-                innerToggle: 'focus'
-            });
-        });
-    </script>
   <script>
-    $('#password-1').hidePassword(true);
-    $('#password-2').showPassword('focus', {
-      toggle: { className: 'my-toggle' }
-    });
+    $(document).ready(function() {
+        /**
+         * Validate the form
+         */
+        $('#formSignup').validate({
+            rules: {
+                name: 'required',
+                email: {
+                    required: true,
+                    email: true,
+                    remote: '/account/validate-email'
+                },
+                password: {
+                    required: true,
+                    minlength: 6,
+                    validPassword: true
+                }
+            },
+            messages: {
+                email: {
+                    remote: 'Email already taken'
+                }
+            }
+        });
+
+
+        /**
+          * Show password toggle button
+          */
+        
+
+       
     $('#show-password').change(function(){
-      $('#password-3').hideShowPassword($(this).prop('checked'));
+      $('#inputPassword').hideShowPassword($(this).prop('checked'));
+    });
     });
   </script>
+
+  <style>
+    #formSignup label.error {
+      margin-left: 10px;
+      width: 100%;
+      color: red;
+    }
+  </style>
 {% endblock %}
-
 {% block body %}
-
     <h1>Sign up</h1>
-
     {% if user.errors is not empty %}
         <p>Errors:</p>
         <ul>
@@ -68,9 +67,7 @@
             {% endfor %}
         </ul>
     {% endif %}
-
     <form class="loginAndRegisterForm" method="post" action="/signup/create" id="formSignup">
-
         <div class="form-group">
             <label for="inputName">Type your user name:</label>
             <div class="input-group mb-3">
@@ -80,33 +77,25 @@
               <input autocomplete="off" id="inputName" name="name" type="text"  autofocus value="{{ user.name }}" class="form-control" placeholder="Name" aria-label="Username" required>
             </div>
         </div>
-
         <div class="form-group">
             <label for="inputEmail">Type your e-mail adress:</label>
-            
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text"><i class="icon-mail-alt"></i></span>
               </div>
               <input autocomplete="off" id="inputEmail" name="email" type="email" value="{{ user.email }}" class="form-control" required placeholder="Email" aria-label="Email">
             </div>
-            
-          </div>
-
-
+        </div>
         <div class="form-group">
             <label for="inputPassword">Type your password:</label>
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text"><i class="icon-lock"></i></span>
               </div>
-              <input name="password" id="inputPassword" type="password" class="form-control" required placeholder="Password" aria-label="Password">
+              <input name="password" id="inputPassword" type="password" class="form-control login-field  login-field-password" required placeholder="Password" aria-label="Password">
             </div>
-          </div>
-
+        </div>
+          <input type="checkbox" id="show-password" class="form-check-input mx-2"> <label for="show-password">Show password</label>
         <button type="submit" class="btn btn-primary btn-block mt-2">Sign up</button>
-
     </form>
-
-
 {% endblock %}

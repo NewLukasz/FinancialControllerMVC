@@ -58,14 +58,14 @@
         </div>
         <div>
             <label>
-                <input type="checkbox" class="form-check-input" name="remember_me" {% if remember_me %} checked="checked"{% endif %} /> Remember me
+                <input type="checkbox" class="form-check-input mx-2" name="remember_me" {% if remember_me %} checked="checked"{% endif %} /> Remember me
             </label>
         </div>
         <div>
             <button type="submit" class="btn btn-primary btn-block mt-2">Log in</button>
         </div>
-        <div>
-            <a href="/password/forgot">Forgot password?</a>
+        <div class='my-1 mx-4 d-flex flex-row-reverse'>
+            <a style="color:grey; font-size: 15px;" href="/password/forgot">Forgot password?</a>
         </div>
         
     </form>
