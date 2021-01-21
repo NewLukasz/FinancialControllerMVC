@@ -4,13 +4,7 @@ namespace App\Controllers;
 
 use \Core\View;
 
-/**
- * Items controller (example)
- *
- * PHP version 7.0
- */
-//class Items extends \Core\Controller
-class Items extends Authenticated
+class AddIncome extends Authenticated
 {
 
     /**
@@ -32,7 +26,7 @@ class Items extends Authenticated
      */
     public function indexAction()
     {
-        View::renderTemplate('Items/index.html');
+        View::renderTemplate('AddIncome/index.html');
     }
 
     /**
