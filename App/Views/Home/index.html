@@ -3,13 +3,37 @@
 {% block title %}Home{% endblock %}
 
 {% block body %}
+<article>
+    <div class="container">
+        <div class="row p-4">
+            <div class="col-lg-6 text-justify">
+                <p>Financial Controller is a web application which help you to control your money flow and show on which target you spend most of you money.
+                </p>
 
-    <h1>Welcome</h1>
-
-    {% if current_user %}
-        Hello {{ current_user.name }}.
-    {% else %}
-        <a href="/signup/new">Sign up</a> or <a href="/login">log in</a>.
-    {% endif %}
+                <h1 class="lead">5 reason why - you should do it</h1>
+                
+                <ol class="text-justify mx-4">
+                    <li>To be albe to follow your dreams!</li>
+                    <li>To provide financial calm to your family.</li>
+                    <li>To be safe in case of emergency situaction.</li>
+                    <li>To be financial independent and be able to quit your job if you want.</li>
+                    <li>Because of life is to short to spend entite lifetime in work.</li>
+                </ol>
+                <p>All of point above is possible - but your life is only on your own! You have to make a aware decisions and this application will <span class="font-weight-bold">help you</span>. 
+                </p>
+                {% if not current_user %}
+                <p>
+                Let me help you with your finances and <span class="font-weight-bold"> register now! </span>
+                </p>
+                <a class="btn btn-success btn-block" href="register.php" role="button">Register!</a>
+                {%endif%}
+            </div>
+            <div class="col-lg-6 mt-2">
+                <img class="img-fluid d-block mx-auto" src="images/letyoursavingsgrow.png">
+            </div>
+            
+        </div>
+    </div>
+</article>
 
 {% endblock %}
