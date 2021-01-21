@@ -4,9 +4,12 @@
 
 
 {% block footer %}
+    <link rel="stylesheet" href="css/showHidePassword.wink.css">
+
     <script src="/js/hideShowPassword.min.js"></script>
     <script src="/js/app.js"></script>
-
+    
+    
     <script>
         $(document).ready(function() {
             /**
@@ -16,6 +19,17 @@
                 show: false,
                 innerToggle: 'focus'
             });
+        });
+    </script>
+
+
+    <script>
+        $('#password-1').hidePassword(true);
+        $('#password-2').showPassword('focus', {
+        toggle: { className: 'my-toggle' }
+        });
+        $('#show-password').change(function(){
+        $('#password-3').hideShowPassword($(this).prop('checked'));
         });
     </script>
 
@@ -53,8 +67,6 @@
         <div>
             <a href="/password/forgot">Forgot password?</a>
         </div>
-
-
         
     </form>
 
