@@ -150,4 +150,16 @@ class Auth
             setcookie('remember_me', '', time() - 3600);  // set to expire in the past
         }
     }
+
+    public static function getPage()
+    {
+        if (isset($_SERVER['QUERY_STRING'])) {
+
+            return $_SERVER['QUERY_STRING'];
+
+        } else {
+
+            return false;
+        }
+    }
 }

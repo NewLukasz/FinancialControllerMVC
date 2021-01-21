@@ -3,13 +3,45 @@
 {% block title %}Home{% endblock %}
 
 {% block body %}
+<article>
+    <div class="container">
+        <div class="row p-4">
+            {% if not current_user %}
+            <div class="col-lg-6 text-justify">
+                <p>Financial Controller is a web application which help you to control your money flow and show on which target you spend most of you money.
+                </p>
+                <h1 class="lead">5 reason why - you should do it</h1>
+                <ol class="text-justify mx-4">
+                    <li>To be albe to follow your dreams!</li>
+                    <li>To provide financial calm to your family.</li>
+                    <li>To be safe in case of emergency situaction.</li>
+                    <li>To be financial independent and be able to quit your job if you want.</li>
+                    <li>Because of life is to short to spend entite lifetime in work.</li>
+                </ol>
+                <p>All of point above is possible - but your life is only on your own! You have to make a aware decisions and this application will <span class="font-weight-bold">help you</span>. 
+                </p>
+                <p>
+                Let me help you with your finances and <span class="font-weight-bold"> register now! </span>
+                </p>
+                <a class="btn btn-success btn-block w-100 p-2" href="/signup/new" role="button">Register!</a>
+            </div>
+            {%else%}
+            <div class="col-lg-6 mt-2">
+                <a class="btn btn-primary btn-block my-1" href="addIncome.php" role="button"><i class="icon-dollar"></i>Add income</a>
+                <a class="btn btn-primary btn-block my-1" href="addExpense.php" role="button"><i class="icon-basket"></i>Add expense</a>
+                <a class="btn btn-primary btn-block my-1" href="showBalance.php" role="button"><i class="icon-chart-pie"></i>Balance</a>
+                <a class="btn btn-primary btn-block my-1" href="/Setting/index" role="button"><i class="icon-wrench"></i>Settings</a>
+                <a class="btn btn-primary btn-block my-1" href="/logout" role="button"><i class="icon-logout"></i>Logout</a>
+            </div>
 
-    <h1>Welcome</h1>
+            {%endif%}
 
-    {% if current_user %}
-        Hello {{ current_user.name }}.
-    {% else %}
-        <a href="/signup/new">Sign up</a> or <a href="/login">log in</a>.
-    {% endif %}
+            <div class="col-lg-6 mt-2">
+                <img class="img-fluid d-block mx-auto" src="images/letyoursavingsgrow.png">
+            </div>
+            
+        </div>
+    </div>
+</article>
 
 {% endblock %}

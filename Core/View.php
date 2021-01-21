@@ -60,6 +60,7 @@ class View
             $loader = new \Twig\Loader\FilesystemLoader(dirname(__DIR__) . '/App/Views');
             $twig = new \Twig\Environment($loader);
             $twig->addGlobal('current_user', \App\Auth::getUser());
+            $twig->addGlobal('current_page', \App\Auth::getPage());
             $twig->addGlobal('flash_messages', \App\Flash::getMessages());
         }
 
