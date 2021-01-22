@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use PDO;
-use \App\Token;
-use \App\Mail;
 use \Core\View;
 
 /**
@@ -37,28 +35,39 @@ class FinancialMovement extends \Core\Model
 
     public function save(){
         $this->validate();
+        if(empty($this->errors)){
+            echo "errors puste";
+        }else{
+            echo"errors: <br>";
+            foreach($this->errors as $error){
+                echo $error;
+                echo "<br>";
+            }
+        }
     }
 
     public function validate(){
-
-
-        var_dump($_POST);
-
-        $this->amount=static::checkCommaAndChangeForDot($this->amount);
-
-        if(checkHowManyDecimalPlacesHasAmount($this->amount)>2){
-            $this->errors[]='Your amount has more than two decimal places.'
+        //amount
+        if(!is_numeric($this->amount)){
+            $this->errors[]="Wrong value of amount";
+        }else{
+            $this->amount=static::checkCommaAndChangeForDot($this->amount);
+            
+            if(static::checkHowManyDecimalPlacesHasAmount($this->amount)>2){
+                $this->errors[]='Your amount has more than two decimal places.';
+            }
+            if($this->amount==''){
+                $this->erorrs[]='Amount is required';
+            }
         }
-        if($this->amount==''){
-            $this->erorrs[]='Amount is required';
-        }
+       //date
+       if(!static::checkIsAValidDate($this->dateOfIncome)){
+           $this->errors[]='You typed wrong data. Please remeber that format is: YYYY-MM-DD';
+       }
+       //comment
         if($this->comment>50){
             $this->errors[]='Your comment exceeded 50 signs.';
         }
-
-        echo "<br><br>Testy wyrazen regularnych <br>";
-
-
     }
 
     public static function checkCommaAndChangeForDot($amount){
@@ -72,6 +81,14 @@ class FinancialMovement extends \Core\Model
         for($i=0;$i<strlen($amount);$i++){
             if($amount[$i]=='.') return strlen(substr($amount,$i+1));
         }
+    }
+
+    public static function checkIsAValidDate($myDateString){
+        $pauseCounter=0;
+        for($i=0;$i<strlen($myDateString);$i++){
+            if($myDateString[$i]=='-') $pauseCounter++;
+        }
+        return ($pauseCounter==2)?(bool)strtotime($myDateString):false;
     }
 
 }
