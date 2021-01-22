@@ -386,10 +386,13 @@ class User extends \Core\Model
         $token = new Token($value);
         $hashed_token = $token->getHash();
 
-        $sql = 'UPDATE users
-                SET is_active = 1,
-                    activation_hash = null
-                WHERE activation_hash = :hashed_token';
+        $userId=static::queryForUserIdBaseHashedToken($hashed_token);
+
+        if(static::fulfilUserTablesWithDefault($userId)){
+            $sql = 'UPDATE users
+            SET is_active = 1,
+                activation_hash = null
+            WHERE activation_hash = :hashed_token';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
@@ -397,6 +400,29 @@ class User extends \Core\Model
         $stmt->bindValue(':hashed_token', $hashed_token, PDO::PARAM_STR);
 
         $stmt->execute();
+        }
+    }
+
+    public static function queryForUserIdBaseHashedToken($token){
+        $sql="SELECT id FROM users WHERE activation_hash=:hashed_token";
+
+        $db=static::getDB();
+        $stmt=$db->prepare($sql);
+
+        $stmt->bindValue(':hashed_token', $token, PDO::PARAM_STR);
+        $stmt->execute();
+        $result=$stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['id'];
+    }
+
+    public static function fulfilUserTablesWithDefault($userId){
+        $db=static::getDB();
+        $defaultIncomeCategoriesQuery=$db->query("SELECT name FROM incomes_category_default");
+        $defaultIncomeCategoriesResult=$defaultIncomeCategoriesQuery->fetchAll();
+        foreach($defaultIncomeCategoriesResult as $nameA){
+            echo $nameA['name']."<br>";
+        }
+        exit();
     }
     
     /**
