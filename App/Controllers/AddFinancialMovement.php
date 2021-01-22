@@ -3,8 +3,9 @@
 namespace App\Controllers;
 
 use \Core\View;
+use \App\Models\FinancialMovement;
 
-class AddIncome extends Authenticated
+class AddFinancialMovement extends Authenticated
 {
 
     /**
@@ -24,19 +25,16 @@ class AddIncome extends Authenticated
      *
      * @return void
      */
-    public function indexAction()
+    public function addIncomeFormAction()
     {
-        View::renderTemplate('AddIncome/index.html');
+        View::renderTemplate('AddFinancialMovement/AddIncome.html');
     }
 
-    /**
-     * Add a new item
-     *
-     * @return void
-     */
-    public function newAction()
+    public function addIncomeAction()
     {
-        echo "new action";
+        $financialMovement = new FinancialMovement($_POST);
+
+        $financialMovement->save();
     }
 
     /**
