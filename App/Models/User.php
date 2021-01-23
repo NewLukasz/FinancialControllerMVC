@@ -385,18 +385,8 @@ class User extends \Core\Model
     {
         $token = new Token($value);
         $hashed_token = $token->getHash();
-
-        $userId=static::queryForUserIdBaseHashedToken($hashed_token);
-
-        $tableIncomesDefault='incomes_category_default';
-        $tableUserIncomesCategory='incomes_category_assigned_to_users';
-
-        static::fulfilUserTablesWithDefaultCategories($userId, $tableIncomesDefault,$tableUserIncomesCategory);
-
-        $tableExpensesDefault='expenses_category_default';
-        $tableUserExpensesCategory='expenses_category_assigned_to_users';
-
-        static::fulfilUserTablesWithDefaultCategories($userId,$tableExpensesDefault,$tableUserExpensesCategory);
+        
+        static::fulfilUserDataTablesWithDefaultValues($hashed_token);
 
         $sql = 'UPDATE users
         SET is_active = 1,
@@ -413,6 +403,28 @@ class User extends \Core\Model
         exit();
         
     }
+    public static function fulfilUserDataTablesWithDefaultValues($hashed_token){
+        $userId=static::queryForUserIdBaseHashedToken($hashed_token);
+
+
+        static::fulfilUserTablesWithDefaultCategoriesAndPaymentMethods(
+            $userId, 
+            static::getDefaultIncomesTable(),
+            static::getUserTableWithIncomesCategory()
+        );
+
+        static::fulfilUserTablesWithDefaultCategoriesAndPaymentMethods(
+            $userId,
+            static::getDefaultExpensesTable(),
+            static::getUserTableWithExpensesCategory()
+        );
+
+        static::fulfilUserTablesWithDefaultCategoriesAndPaymentMethods(
+            $userId,
+            static::getDefaultPaymentMethods(),
+            static::getUserTableWithPaymentMethods(),
+        );
+    }
 
     public static function queryForUserIdBaseHashedToken($token){
         $sql="SELECT id FROM users WHERE activation_hash=:hashed_token";
@@ -426,17 +438,16 @@ class User extends \Core\Model
         return $result['id'];
     }
 
-    public static function fulfilUserTablesWithDefaultCategories($userId, $tableDefault, $tableUserCategory){
+    public static function fulfilUserTablesWithDefaultCategoriesAndPaymentMethods($userId, $tableDefault, $tableUserCategory){
         $db=static::getDB();
-        $defaultIncomeCategoriesQuery=$db->query(("SELECT name FROM ").$tableDefault);
-        $defaultIncomeCategoriesResult=$defaultIncomeCategoriesQuery->fetchAll();
-        foreach($defaultIncomeCategoriesResult as $nameArray){
+        $defaultCategoriesQuery=$db->query(("SELECT name FROM ").$tableDefault);
+        $defaultCategoriesResult=$defaultCategoriesQuery->fetchAll();
+        foreach($defaultCategoriesResult as $nameArray){
             $name=$nameArray['name'];
-            echo $nameArray['name'];
             $db->query("INSERT INTO ".$tableUserCategory." VALUES(NULL,'$userId','$name')");
         }
     }
-    
+
     /**
      * Update the user's profile
      *
