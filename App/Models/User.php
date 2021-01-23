@@ -388,11 +388,20 @@ class User extends \Core\Model
 
         $userId=static::queryForUserIdBaseHashedToken($hashed_token);
 
-        if(static::fulfilUserTablesWithDefault($userId)){
-            $sql = 'UPDATE users
-            SET is_active = 1,
-                activation_hash = null
-            WHERE activation_hash = :hashed_token';
+        $tableIncomesDefault='incomes_category_default';
+        $tableUserIncomesCategory='incomes_category_assigned_to_users';
+
+        static::fulfilUserTablesWithDefaultCategories($userId, $tableIncomesDefault,$tableUserIncomesCategory);
+
+        $tableExpensesDefault='expenses_category_default';
+        $tableUserExpensesCategory='expenses_category_assigned_to_users';
+
+        static::fulfilUserTablesWithDefaultCategories($userId,$tableExpensesDefault,$tableUserExpensesCategory);
+
+        $sql = 'UPDATE users
+        SET is_active = 1,
+            activation_hash = null
+        WHERE activation_hash = :hashed_token';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
@@ -400,7 +409,9 @@ class User extends \Core\Model
         $stmt->bindValue(':hashed_token', $hashed_token, PDO::PARAM_STR);
 
         $stmt->execute();
-        }
+
+        exit();
+        
     }
 
     public static function queryForUserIdBaseHashedToken($token){
@@ -415,14 +426,15 @@ class User extends \Core\Model
         return $result['id'];
     }
 
-    public static function fulfilUserTablesWithDefault($userId){
+    public static function fulfilUserTablesWithDefaultCategories($userId, $tableDefault, $tableUserCategory){
         $db=static::getDB();
-        $defaultIncomeCategoriesQuery=$db->query("SELECT name FROM incomes_category_default");
+        $defaultIncomeCategoriesQuery=$db->query(("SELECT name FROM ").$tableDefault);
         $defaultIncomeCategoriesResult=$defaultIncomeCategoriesQuery->fetchAll();
-        foreach($defaultIncomeCategoriesResult as $nameA){
-            echo $nameA['name']."<br>";
+        foreach($defaultIncomeCategoriesResult as $nameArray){
+            $name=$nameArray['name'];
+            echo $nameArray['name'];
+            $db->query("INSERT INTO ".$tableUserCategory." VALUES(NULL,'$userId','$name')");
         }
-        exit();
     }
     
     /**
