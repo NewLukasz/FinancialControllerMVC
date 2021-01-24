@@ -385,9 +385,6 @@ class User extends \Core\Model
     {
         $token = new Token($value);
         $hashed_token = $token->getHash();
-        
-        static::fulfilUserDataTablesWithDefaultValues($hashed_token);
-
         $sql = 'UPDATE users
         SET is_active = 1,
             activation_hash = null
@@ -399,55 +396,7 @@ class User extends \Core\Model
         $stmt->bindValue(':hashed_token', $hashed_token, PDO::PARAM_STR);
 
         $stmt->execute();
-
-        exit();
-        
     }
-    public static function fulfilUserDataTablesWithDefaultValues($hashed_token){
-        $userId=static::queryForUserIdBaseHashedToken($hashed_token);
-
-
-        static::fulfilUserTablesWithDefaultCategoriesAndPaymentMethods(
-            $userId, 
-            static::getDefaultIncomesTable(),
-            static::getUserTableWithIncomesCategory()
-        );
-
-        static::fulfilUserTablesWithDefaultCategoriesAndPaymentMethods(
-            $userId,
-            static::getDefaultExpensesTable(),
-            static::getUserTableWithExpensesCategory()
-        );
-
-        static::fulfilUserTablesWithDefaultCategoriesAndPaymentMethods(
-            $userId,
-            static::getDefaultPaymentMethods(),
-            static::getUserTableWithPaymentMethods(),
-        );
-    }
-
-    public static function queryForUserIdBaseHashedToken($token){
-        $sql="SELECT id FROM users WHERE activation_hash=:hashed_token";
-
-        $db=static::getDB();
-        $stmt=$db->prepare($sql);
-
-        $stmt->bindValue(':hashed_token', $token, PDO::PARAM_STR);
-        $stmt->execute();
-        $result=$stmt->fetch(PDO::FETCH_ASSOC);
-        return $result['id'];
-    }
-
-    public static function fulfilUserTablesWithDefaultCategoriesAndPaymentMethods($userId, $tableDefault, $tableUserCategory){
-        $db=static::getDB();
-        $defaultCategoriesQuery=$db->query(("SELECT name FROM ").$tableDefault);
-        $defaultCategoriesResult=$defaultCategoriesQuery->fetchAll();
-        foreach($defaultCategoriesResult as $nameArray){
-            $name=$nameArray['name'];
-            $db->query("INSERT INTO ".$tableUserCategory." VALUES(NULL,'$userId','$name')");
-        }
-    }
-
     /**
      * Update the user's profile
      *
