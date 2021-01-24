@@ -143,7 +143,11 @@ class FinancialMovement extends \Core\Model
     }
 
     public static function getIncomeCategories(){
-        return static::getCategoriesAndMethodFromDB(static::getUserTableWithIncomesCategory());
+        if(!isset($_SESSION['incomeCategories'])){
+            return $_SESSION['incomeCategories']=static::getCategoriesAndMethodFromDB(static::getUserTableWithIncomesCategory());
+        }else{
+            return $_SESSION['incomeCategories'];
+        }
     }
 
     protected static function getCategoriesAndMethodFromDB($table){
