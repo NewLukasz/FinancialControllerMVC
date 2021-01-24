@@ -27,7 +27,9 @@ class AddFinancialMovement extends Authenticated
      */
     public function addIncomeFormAction()
     {
-        View::renderTemplate('AddFinancialMovement/AddIncome.html');
+        View::renderTemplate('AddFinancialMovement/AddIncome.html',[
+            'IncomeCategories'=> FinancialMovement::getIncomeCategories()
+        ]);
     }
 
     public function addIncomeAction()

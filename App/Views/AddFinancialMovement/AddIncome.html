@@ -11,6 +11,8 @@
 
 {% block body %}
 
+
+
 <form class="financialMovementsForm" action="/addFinancialMovement/addIncome" method="post">
     <div class="form-group">
         <label>Type amount of income:</label>
@@ -38,6 +40,9 @@
     </div>
     <label>Choose source of income: </label>
     <select class="form-control mb-2" name="sourceOfIncome">
+    {%for category in IncomeCategories%}
+      <option>{{category}}</option>
+    {%endfor%}
     </select>
     
     <div class="form-group mt-3">
@@ -54,5 +59,8 @@
       <button type="submit" class="btn btn-primary btn-block mt-2">Add income</button>
     </div>
 </form>
+
+{{AAA}}
+
 
 {% endblock %}

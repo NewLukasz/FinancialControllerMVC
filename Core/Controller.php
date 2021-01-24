@@ -4,6 +4,7 @@ namespace Core;
 
 use \App\Auth;
 use \App\Flash;
+use \App\Config;
 
 /**
  * Base controller

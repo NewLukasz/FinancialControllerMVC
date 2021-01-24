@@ -93,11 +93,6 @@ class FinancialMovement extends \Core\Model
         return ($pauseCounter==2)?(bool)strtotime($myDateString):false;
     }
 
-
-
-
-
-    
     public static function fulfilUserDataTablesWithDefaultValues($value){
 
         $token = new Token($value);
@@ -147,4 +142,18 @@ class FinancialMovement extends \Core\Model
         }
     }
 
+    public static function getIncomeCategories(){
+        return static::getCategoriesAndMethodFromDB(static::getUserTableWithIncomesCategory());
+    }
+
+    protected static function getCategoriesAndMethodFromDB($table){
+        $db=static::getDB();
+        $categoriesQuery=$db->query(("SELECT name FROM ").$table.(" WHERE user_id='").$_SESSION['user_id'].("'"));
+        $result=$categoriesQuery->fetchAll();
+        $categories=[];
+        foreach($result as $nameArray){
+            $categories[]=$nameArray['name'];
+        }
+        return $categories;
+    }
 }
