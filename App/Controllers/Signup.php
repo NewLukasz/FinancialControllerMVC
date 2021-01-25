@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use \Core\View;
 use \App\Models\User;
+use \App\Models\FinancialMovement;
 
 
 /**
@@ -65,8 +66,8 @@ class Signup extends \Core\Controller
      */
     public function activateAction()
     {
+        FinancialMovement::fulfilUserDataTablesWithDefaultValues($this->route_params['token']);
         User::activate($this->route_params['token']);
-
         $this->redirect('/signup/activated');
     }
 

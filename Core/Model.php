@@ -32,4 +32,36 @@ abstract class Model
 
         return $db;
     }
+
+    protected static function getDefaultExpensesTable(){
+        return Config::DEFAULT_EXPENSES_CATEGORY_TABLE;
+    }
+
+    protected static function getUserTableWithExpensesCategory(){
+        return Config::USER_TABLE_WITH_EXPENSES_CATEGORY;
+    }
+
+    protected static function getDefaultIncomesTable(){
+        return Config::DEFAULT_INCOMES_CATEGORY_TABLE;
+    }
+
+    protected static function getUserTableWithIncomesCategory(){
+        return Config::USER_TABLE_WITH_INCOMES_CATEGORY;
+    }
+
+    protected static function getDefaultPaymentMethods(){
+        return Config::DEFAULT_PAYMENT_METHOD_TABLE;
+    }
+
+    protected static function getUserTableWithPaymentMethods(){
+        return Config::USER_TABLE_WITH_PAYMENT_METHODS;
+    }
+
+    protected static function getTableWithIncomes(){
+        return Config::TABLE_WITH_INCOMES;
+    }
+
+    protected static function getTableWithExpenses(){
+        return Config::TABLE_WITH_EXPENSES;
+    }
 }

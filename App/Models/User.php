@@ -385,11 +385,10 @@ class User extends \Core\Model
     {
         $token = new Token($value);
         $hashed_token = $token->getHash();
-
         $sql = 'UPDATE users
-                SET is_active = 1,
-                    activation_hash = null
-                WHERE activation_hash = :hashed_token';
+        SET is_active = 1,
+            activation_hash = null
+        WHERE activation_hash = :hashed_token';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
@@ -398,7 +397,6 @@ class User extends \Core\Model
 
         $stmt->execute();
     }
-    
     /**
      * Update the user's profile
      *
