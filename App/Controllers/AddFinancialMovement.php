@@ -28,7 +28,8 @@ class AddFinancialMovement extends Authenticated
     public function addIncomeFormAction()
     {
         View::renderTemplate('AddFinancialMovement/AddIncome.html',[
-            'IncomeCategories'=> FinancialMovement::getIncomeCategories()
+            'IncomeCategories'=> FinancialMovement::getIncomeCategories(),
+            'userId'=>$_SESSION['user_id']
         ]);
     }
 
@@ -36,7 +37,7 @@ class AddFinancialMovement extends Authenticated
     {
         $financialMovement = new FinancialMovement($_POST);
 
-        $financialMovement->save();
+        $financialMovement->addIncome();
     }
 
     /**

@@ -35,10 +35,37 @@ class FinancialMovement extends \Core\Model
         };
     }
 
-    public function save(){
+    public function AddIncome(){
+
+        $numerKategorii=10;
+        $argumentsForBindValueFunction=array(
+            $userId=array(':user_id', $this->userId, PDO::PARAM_INT),
+            $incomeCategory=array(':income_category_assigned_to_user_id', $numerKategorii, PDO::PARAM_INT),
+            $amount=array(':amount' , $this->amount, PDO::PARAM_INT),
+            $dateOfIncome=array(':date_of_income',$this->dateOfIncome, PDO::PARAM_STR),
+            $incomeComment=array(':income_comment', $this->comment, PDO::PARAM_STR)
+        );
+        $this->addMovement('incomes',$argumentsForBindValueFunction);
+    }
+
+    protected function addMovement($tableForData, $argumentsForBindValueFunction=[]){
         $this->validate();
         if(empty($this->errors)){
-            echo "errors puste";
+            $valuesToQuery='';
+            foreach($argumentsForBindValueFunction as $arguments){
+                $valuesToQuery=$valuesToQuery.$arguments[0].',';
+            }
+            $valuesToQuery=substr($valuesToQuery,0,-1);
+            //$sql='INSERT INTO '.$tableForData.' VALUES(NULL, :user_id, :income_category_assigned_to_user_id, :amount, :date_of_income, :income_comment)';
+            $sql='INSERT INTO '.$tableForData.' VALUES(NULL,'.$valuesToQuery.')';
+
+            $db=static::getDB();
+            $stmt=$db->prepare($sql);
+            foreach($argumentsForBindValueFunction as $arguments){
+                 $stmt->bindValue($arguments[0],$arguments[1],$arguments[2]);
+            }
+            $stmt->execute();
+
         }else{
             echo"errors: <br>";
             foreach($this->errors as $error){
@@ -67,7 +94,7 @@ class FinancialMovement extends \Core\Model
            $this->errors[]='You typed wrong data. Please remeber that format is: YYYY-MM-DD';
        }
        //comment
-        if($this->comment>50){
+        if(strlen($this->comment)>50){
             $this->errors[]='Your comment exceeded 50 signs.';
         }
     }
