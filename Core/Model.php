@@ -56,4 +56,12 @@ abstract class Model
     protected static function getUserTableWithPaymentMethods(){
         return Config::USER_TABLE_WITH_PAYMENT_METHODS;
     }
+
+    protected static function getTableWithIncomes(){
+        return Config::TABLE_WITH_INCOMES;
+    }
+
+    protected static function getTableWithExpenses(){
+        return Config::TABLE_WITH_EXPENSES;
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use \Core\View;
 use \App\Models\FinancialMovement;
+use \App\Flash;
 
 class AddFinancialMovement extends Authenticated
 {
@@ -37,7 +38,13 @@ class AddFinancialMovement extends Authenticated
     {
         $financialMovement = new FinancialMovement($_POST);
 
-        $financialMovement->addIncome();
+        if($financialMovement->addIncome()){
+            Flash::addMessage('Income added.');
+            View::renderTemplate('AddFinancialMovement/AddIncome.html',[
+                'IncomeCategories'=> FinancialMovement::getIncomeCategories(),
+                'userId'=>$_SESSION['user_id']
+            ]);
+        }
     }
 
     /**

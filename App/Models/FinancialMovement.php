@@ -35,17 +35,30 @@ class FinancialMovement extends \Core\Model
         };
     }
 
-    public function AddIncome(){
+    public function addIncome(){
 
-        $numerKategorii=10;
+        //$categoryId=static::getCategoryOrMethodIdByName($this->sourceOfIncome, 'incomes_category_assigned_to_users');
+        $categoryId=static::getCategoryOrMethodIdByName($this->sourceOfIncome, static::getUserTableWithIncomesCategory());
+
         $argumentsForBindValueFunction=array(
             $userId=array(':user_id', $this->userId, PDO::PARAM_INT),
-            $incomeCategory=array(':income_category_assigned_to_user_id', $numerKategorii, PDO::PARAM_INT),
+            $incomeCategory=array(':income_category_assigned_to_user_id', $categoryId, PDO::PARAM_INT),
             $amount=array(':amount' , $this->amount, PDO::PARAM_INT),
             $dateOfIncome=array(':date_of_income',$this->dateOfIncome, PDO::PARAM_STR),
             $incomeComment=array(':income_comment', $this->comment, PDO::PARAM_STR)
         );
-        $this->addMovement('incomes',$argumentsForBindValueFunction);
+        $this->addMovement(static::getTableWithIncomes(),$argumentsForBindValueFunction);
+        return true;
+    }
+
+    protected static function getCategoryOrMethodIdByName($name,$tableWithData){
+        $sql="SELECT id FROM ".$tableWithData." WHERE name= :name";
+        $db=static::getDB();
+        $stmt=$db->prepare($sql);
+        $stmt->bindValue(':name', $name, PDO::PARAM_STR);
+        $stmt->execute();
+        $result=$stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['id'];
     }
 
     protected function addMovement($tableForData, $argumentsForBindValueFunction=[]){
@@ -56,7 +69,6 @@ class FinancialMovement extends \Core\Model
                 $valuesToQuery=$valuesToQuery.$arguments[0].',';
             }
             $valuesToQuery=substr($valuesToQuery,0,-1);
-            //$sql='INSERT INTO '.$tableForData.' VALUES(NULL, :user_id, :income_category_assigned_to_user_id, :amount, :date_of_income, :income_comment)';
             $sql='INSERT INTO '.$tableForData.' VALUES(NULL,'.$valuesToQuery.')';
 
             $db=static::getDB();
