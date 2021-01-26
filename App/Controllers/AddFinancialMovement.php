@@ -41,11 +41,11 @@ class AddFinancialMovement extends Authenticated
 
     public function addIncomeAction()
     {
-        $financialMovement = new FinancialMovement($_POST);
+        $income = new FinancialMovement($_POST);
         if(!isset($_SESSION['incomesCategories'])){
             $_SESSION['incomesCategories']=FinancialMovement::getIncomeCategories();
         }
-        if($financialMovement->addIncome()){
+        if($income->addIncome()){
             Flash::addMessage('Income added.');
             $this->redirect('/addFinancialMovement/AddIncomeForm');
         }else{
@@ -55,11 +55,42 @@ class AddFinancialMovement extends Authenticated
             View::renderTemplate('AddFinancialMovement/AddIncome.html',[
                 'IncomeCategories'=>$_SESSION['incomesCategories'],
                 'userId'=>$_SESSION['user_id'],
-                'income'=>$financialMovement
+                'income'=>$income
             ]);
         }
     }
 
+    public function addExpenseFormAction(){
+        if(!isset($_SESSION['expenseCategories'])||!isset($_SESSION['paymentMethods'])){
+            $_SESSION['expenseCategories']=FinancialMovement::getExpenseCategories();
+            $_SESSION['paymentMethods']=FinancialMovement::getPaymentMethods();
+        }
+        View::renderTemplate('AddFinancialMovement/AddExpense.html',[
+            'expenseCategories'=> $_SESSION['expenseCategories'],
+            'paymentMethods'=>$_SESSION['paymentMethods'],
+            'userId'=>$_SESSION['user_id']
+        ]);
+    }
+
+    public function addExpenseAction(){
+        $expense = new FinancialMovement($_POST);
+        if(!isset($_SESSION['expenseCategories'])||!isset($_SESSION['paymentMethods'])){
+            $_SESSION['expenseCategories']=FinancialMovement::getExpenseCategories();
+            $_SESSION['paymentMethods']=FinancialMovement::getPaymentMethods();
+        }
+        if($expense->addExpense()){
+            Flash::addMessage('Expense added');
+            $this->redirect('/addFinancialMovement/AddExpenseForm');
+        }else{
+            Flash::addMessage('Expense has not been added','warning');
+            View::renderTemplate('AddFinancialMovement/AddExpense.html',[
+                'expenseCategories'=>$_SESSION['expenseCategories'],
+                'paymentMethods'=>$_SESSION['paymentMethods'],
+                'userId'=>$_SESSION['user_id'],
+                'expense'=>$expense
+            ]);
+        }
+    }
     /**
      * Show an item
      *

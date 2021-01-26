@@ -42,11 +42,28 @@ class FinancialMovement extends \Core\Model
             $argumentsForBindValueFunction=array(
                 $userId=array(':user_id', $this->userId, PDO::PARAM_INT),
                 $incomeCategory=array(':income_category_assigned_to_user_id', $categoryId, PDO::PARAM_INT),
-                $amount=array(':amount' , $this->amount, PDO::PARAM_INT),
-                $dateOfIncome=array(':date_of_income',$this->dateOfIncome, PDO::PARAM_STR),
+                $amount=array(':amount' , $this->amount, PDO::PARAM_STR),
+                $dateOfIncome=array(':date_of_income',$this->date, PDO::PARAM_STR),
                 $incomeComment=array(':income_comment', $this->comment, PDO::PARAM_STR)
             );
             return $this->addMovement(static::getTableWithIncomes(),$argumentsForBindValueFunction);
+        }
+    }
+    
+    public function addExpense(){
+        if(isset($this->expenseCategory)&&isset($this->paymentMethod)){
+            $categoryId=static::getCategoryOrMethodIdByName($this->expenseCategory, static::getUserTableWithExpensesCategory());
+            $methodId=static::getCategoryOrMethodIdByName($this->paymentMethod,static::getUserTableWithPaymentMethods());
+
+            $argumentsForBindValueFunction=array(
+                $userId=array(':user_id', $this->userId, PDO::PARAM_INT),
+                $expenseCategory=array(':expense_category_assigned_to_user_id', $categoryId, PDO::PARAM_INT),
+                $paymentMethod=array(':payment_method_assigned_to_user_id',$methodId, PDO::PARAM_INT),
+                $amount=array(':amount', $this->amount,PDO::PARAM_STR),
+                $dateOfExpense=array(':date_of_expense', $this->date, PDO::PARAM_STR),
+                $expenseComment=array(':expense_comment', $this->comment, PDO::PARAM_STR)
+            );
+            return $this->addMovement(static::getTableWithExpenses(),$argumentsForBindValueFunction);
         }
     }
 
@@ -84,11 +101,10 @@ class FinancialMovement extends \Core\Model
 
     public function validate(){
         //amount
+        $this->amount=static::checkCommaAndChangeForDot($this->amount);
         if(!is_numeric($this->amount)){
             $this->errors[]="Wrong value of amount";
         }else{
-            $this->amount=static::checkCommaAndChangeForDot($this->amount);
-            
             if(static::checkHowManyDecimalPlacesHasAmount($this->amount)>2){
                 $this->errors[]='Your amount has more than two decimal places.';
             }
@@ -97,7 +113,7 @@ class FinancialMovement extends \Core\Model
             }
         }
        //date
-       if(!static::checkIsAValidDate($this->dateOfIncome)){
+       if(!static::checkIsAValidDate($this->date)){
            $this->errors[]='You typed wrong data. Please remeber that format is: YYYY-MM-DD';
        }
        //comment
@@ -181,6 +197,22 @@ class FinancialMovement extends \Core\Model
             return $_SESSION['incomeCategories']=static::getCategoriesAndMethodFromDB(static::getUserTableWithIncomesCategory());
         }else{
             return $_SESSION['incomeCategories'];
+        }
+    }
+
+    public static function getExpenseCategories(){
+        if(!isset($_SESSION['expenseCategories'])){
+            return $_SESSION['expenseCategories']=static::getCategoriesAndMethodFromDB(static::getUserTableWithExpensesCategory());
+        }else{
+            return $_SESSION['expenseCategories'];
+        }
+    }
+
+    public static function getPaymentMethods(){
+        if(!isset($_SESSION['paymentMethods'])){
+            return $_SESSION['paymentMethods']=static::getCategoriesAndMethodFromDB(static::getUserTableWithPaymentMethods());
+        }else{
+            return $_SESSION['paymentMethods'];
         }
     }
 
