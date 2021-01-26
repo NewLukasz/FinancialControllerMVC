@@ -29,8 +29,12 @@ class AddFinancialMovement extends Authenticated
      */
     public function addIncomeFormAction()
     {
+        if(!isset($_SESSION['incomesCategories'])){
+            $_SESSION['incomesCategories']=FinancialMovement::getIncomeCategories();
+        }
+
         View::renderTemplate('AddFinancialMovement/AddIncome.html',[
-            'IncomeCategories'=> FinancialMovement::getIncomeCategories(),
+            'IncomeCategories'=> $_SESSION['incomesCategories'],
             'userId'=>$_SESSION['user_id']
         ]);
     }
@@ -38,10 +42,21 @@ class AddFinancialMovement extends Authenticated
     public function addIncomeAction()
     {
         $financialMovement = new FinancialMovement($_POST);
-
+        if(!isset($_SESSION['incomesCategories'])){
+            $_SESSION['incomesCategories']=FinancialMovement::getIncomeCategories();
+        }
         if($financialMovement->addIncome()){
             Flash::addMessage('Income added.');
             $this->redirect('/addFinancialMovement/AddIncomeForm');
+        }else{
+            Flash::addMessage('Income has not been added.','warning');
+            
+            
+            View::renderTemplate('AddFinancialMovement/AddIncome.html',[
+                'IncomeCategories'=>$_SESSION['incomesCategories'],
+                'userId'=>$_SESSION['user_id'],
+                'income'=>$financialMovement
+            ]);
         }
     }
 

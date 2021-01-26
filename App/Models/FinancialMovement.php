@@ -36,19 +36,18 @@ class FinancialMovement extends \Core\Model
     }
 
     public function addIncome(){
+        if(isset($this->sourceOfIncome)){
+            $categoryId=static::getCategoryOrMethodIdByName($this->sourceOfIncome, static::getUserTableWithIncomesCategory());
 
-        //$categoryId=static::getCategoryOrMethodIdByName($this->sourceOfIncome, 'incomes_category_assigned_to_users');
-        $categoryId=static::getCategoryOrMethodIdByName($this->sourceOfIncome, static::getUserTableWithIncomesCategory());
-
-        $argumentsForBindValueFunction=array(
-            $userId=array(':user_id', $this->userId, PDO::PARAM_INT),
-            $incomeCategory=array(':income_category_assigned_to_user_id', $categoryId, PDO::PARAM_INT),
-            $amount=array(':amount' , $this->amount, PDO::PARAM_INT),
-            $dateOfIncome=array(':date_of_income',$this->dateOfIncome, PDO::PARAM_STR),
-            $incomeComment=array(':income_comment', $this->comment, PDO::PARAM_STR)
-        );
-        $this->addMovement(static::getTableWithIncomes(),$argumentsForBindValueFunction);
-        return true;
+            $argumentsForBindValueFunction=array(
+                $userId=array(':user_id', $this->userId, PDO::PARAM_INT),
+                $incomeCategory=array(':income_category_assigned_to_user_id', $categoryId, PDO::PARAM_INT),
+                $amount=array(':amount' , $this->amount, PDO::PARAM_INT),
+                $dateOfIncome=array(':date_of_income',$this->dateOfIncome, PDO::PARAM_STR),
+                $incomeComment=array(':income_comment', $this->comment, PDO::PARAM_STR)
+            );
+            return $this->addMovement(static::getTableWithIncomes(),$argumentsForBindValueFunction);
+        }
     }
 
     protected static function getCategoryOrMethodIdByName($name,$tableWithData){
@@ -76,14 +75,10 @@ class FinancialMovement extends \Core\Model
             foreach($argumentsForBindValueFunction as $arguments){
                  $stmt->bindValue($arguments[0],$arguments[1],$arguments[2]);
             }
-            $stmt->execute();
+            return $stmt->execute();
 
         }else{
-            echo"errors: <br>";
-            foreach($this->errors as $error){
-                echo $error;
-                echo "<br>";
-            }
+            return false;
         }
     }
 

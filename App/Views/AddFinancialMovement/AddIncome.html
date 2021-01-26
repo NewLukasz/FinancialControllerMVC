@@ -7,12 +7,22 @@
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="/js/calendar.js"></script>
+<script src="/js/app.js"></script>
+
+
 {%endblock%}
 
 {% block body %}
 
-<form class="financialMovementsForm" action="/addFinancialMovement/addIncome" method="post">
-
+<form class="financialMovementsForm" action="/addFinancialMovement/addIncome" method="post" id='incomeForm'>
+  {% if income.errors is not empty %}
+        <p>Errors:</p>
+        <ul>
+            {% for error in income.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+{% endif %}
   <input type="hidden" name="userId" value="{{userId}}">
 
   <div class="form-group">
@@ -22,7 +32,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text"><i class="icon-money"></i></span>
         </div>
-        <input autocomplete="off" name="amount" type="text" class="form-control" placeholder="Amount" aria-label="Amount" >
+        <input autocomplete="off" name="amount" value='{{income.amount}}' type="text" class="form-control" placeholder="Amount" aria-label="Amount" >
       </div>
       
   </div>
@@ -34,8 +44,11 @@
         <div class="input-group-prepend">
           <span class="input-group-text"><i class="icon-calendar"></i></span>
         </div>
-        <input id="datePicker"  name="dateOfIncome" type="text" class="form-control" aria-label="Date" >
-        
+        {%if income%}
+          <input id="datePickerSession"  name="dateOfIncome" value="{{income.dateOfIncome}}" type="text" class="form-control" aria-label="Date" >
+        {%else%}
+          <input id="datePicker"  name="dateOfIncome" type="text" class="form-control" aria-label="Date" >
+        {%endif%}
       </div>
       
   </div>
@@ -52,7 +65,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text"><i class="icon-pencil"></i></span>
         </div>
-        <input autocomplete="off" name="comment" type="text" class="form-control" placeholder="Comment (optional)" aria-label="Comment">
+        <input autocomplete="off" name="comment" value="{{income.comment}}" type="text" class="form-control" placeholder="Comment (optional)" aria-label="Comment">
       </div>
       
   </div>
