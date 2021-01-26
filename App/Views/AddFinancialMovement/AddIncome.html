@@ -9,31 +9,13 @@
 <script src="/js/calendar.js"></script>
 <script src="/js/app.js"></script>
 
-<script>
-  $(document).ready(function() {
-      /**
-       * Validate the form
-       */
-      $('#incomeForm').validate({
-          rules: {
-              amount: 'required'
-          }
-      });
-  });
-</script>
-
-<style>
-  #formSignup label.error {
-    margin-left: 10px;
-    width: 100%;
-    color: red;
-  }
-</style>
 
 {%endblock%}
 
 {% block body %}
-{% if income.errors is not empty %}
+
+<form class="financialMovementsForm" action="/addFinancialMovement/addIncome" method="post" id='incomeForm'>
+  {% if income.errors is not empty %}
         <p>Errors:</p>
         <ul>
             {% for error in income.errors %}
@@ -41,8 +23,6 @@
             {% endfor %}
         </ul>
 {% endif %}
-<form class="financialMovementsForm" action="/addFinancialMovement/addIncome" method="post" id='incomeForm'>
-
   <input type="hidden" name="userId" value="{{userId}}">
 
   <div class="form-group">
@@ -64,7 +44,11 @@
         <div class="input-group-prepend">
           <span class="input-group-text"><i class="icon-calendar"></i></span>
         </div>
-        <input id="datePicker"  name="dateOfIncome" value="{{income.dateOfIncome}}" type="text" class="form-control" aria-label="Date" >
+        {%if income%}
+          <input id="datePickerSession"  name="dateOfIncome" value="{{income.dateOfIncome}}" type="text" class="form-control" aria-label="Date" >
+        {%else%}
+          <input id="datePicker"  name="dateOfIncome" type="text" class="form-control" aria-label="Date" >
+        {%endif%}
       </div>
       
   </div>

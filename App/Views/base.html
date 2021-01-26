@@ -39,13 +39,13 @@
                     <a class="nav-link" href="/AddFinancialMovement/addIncomeForm"><i class="icon-dollar"></i>Add income</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="addExpense.php"><i class="icon-basket"></i>Add expense</a>
+                    <a class="nav-link" href="/AddFinancialMovement/addExpenseForm"><i class="icon-basket"></i>Add expense</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="showBalance.php"><i class="icon-chart-pie"></i>Balance</a>
+                    <a class="nav-link" href="showBalance/balance"><i class="icon-chart-pie"></i>Balance</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/Setting/index"><i class="icon-wrench"></i>Settings</a>
+                    <a class="nav-link" href="/setting/index"><i class="icon-wrench"></i>Settings</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/logout"><i class="icon-logout"></i>Logout</a>
@@ -69,15 +69,7 @@
     </nav>
     {% endif %}
     </nav>
-    <nav>
-        <ul>
-            <li><a href="/">Home</a></li>
-            {% if current_user %}
-                <li><a href="/profile/show">Profile</a></li>
-                <li><a href="/logout">Log out</a></li>                                
-            {% endif %}
-        </ul>
-    </nav>
+    
 
     {% for message in flash_messages %}
         <div class="financialMovementsForm alert alert-{{ message.type }}">
