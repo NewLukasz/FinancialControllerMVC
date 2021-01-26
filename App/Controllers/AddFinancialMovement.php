@@ -61,19 +61,22 @@ class AddFinancialMovement extends Authenticated
     }
 
     public function addExpenseFormAction(){
-        if(!isset($_SESSION['expenseCategories'])){
+        if(!isset($_SESSION['expenseCategories'])||!isset($_SESSION['paymentMethods'])){
             $_SESSION['expenseCategories']=FinancialMovement::getExpenseCategories();
+            $_SESSION['paymentMethods']=FinancialMovement::getPaymentMethods();
         }
         View::renderTemplate('AddFinancialMovement/AddExpense.html',[
             'expenseCategories'=> $_SESSION['expenseCategories'],
+            'paymentMethods'=>$_SESSION['paymentMethods'],
             'userId'=>$_SESSION['user_id']
         ]);
     }
 
     public function addExpenseAction(){
         $expense = new FinancialMovement($_POST);
-        if(!isset($_SESSION['expenseCategories'])){
+        if(!isset($_SESSION['expenseCategories'])||!isset($_SESSION['paymentMethods'])){
             $_SESSION['expenseCategories']=FinancialMovement::getExpenseCategories();
+            $_SESSION['paymentMethods']=FinancialMovement::getPaymentMethods();
         }
         if($expense->addExpense()){
             Flash::addMessage('Expense added');
@@ -81,7 +84,8 @@ class AddFinancialMovement extends Authenticated
         }else{
             Flash::addMessage('Expense has not been added','warning');
             View::renderTemplate('AddFinancialMovement/AddExpense.html',[
-                'IncomeCategories'=>$_SESSION['expenseCategories'],
+                'expenseCategories'=>$_SESSION['expenseCategories'],
+                'paymentMethods'=>$_SESSION['paymentMethods'],
                 'userId'=>$_SESSION['user_id'],
                 'expense'=>$expense
             ]);

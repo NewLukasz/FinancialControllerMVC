@@ -50,6 +50,7 @@ class FinancialMovement extends \Core\Model
         }
     }
 
+
     protected static function getCategoryOrMethodIdByName($name,$tableWithData){
         $sql="SELECT id FROM ".$tableWithData." WHERE name= :name";
         $db=static::getDB();
@@ -189,6 +190,14 @@ class FinancialMovement extends \Core\Model
             return $_SESSION['expenseCategories']=static::getCategoriesAndMethodFromDB(static::getUserTableWithExpensesCategory());
         }else{
             return $_SESSION['expenseCategories'];
+        }
+    }
+
+    public static function getPaymentMethods(){
+        if(!isset($_SESSION['paymentMethods'])){
+            return $_SESSION['paymentMethods']=static::getCategoriesAndMethodFromDB(static::getUserTableWithPaymentMethods());
+        }else{
+            return $_SESSION['paymentMethods'];
         }
     }
 
