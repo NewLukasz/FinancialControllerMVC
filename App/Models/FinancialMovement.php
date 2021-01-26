@@ -184,6 +184,14 @@ class FinancialMovement extends \Core\Model
         }
     }
 
+    public static function getExpenseCategories(){
+        if(!isset($_SESSION['expenseCategories'])){
+            return $_SESSION['expenseCategories']=static::getCategoriesAndMethodFromDB(static::getUserTableWithExpensesCategory());
+        }else{
+            return $_SESSION['expenseCategories'];
+        }
+    }
+
     protected static function getCategoriesAndMethodFromDB($table){
         $db=static::getDB();
         $categoriesQuery=$db->query(("SELECT name FROM ").$table.(" WHERE user_id='").$_SESSION['user_id'].("'"));
