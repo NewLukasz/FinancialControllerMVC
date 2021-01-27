@@ -13,7 +13,9 @@ class ShowBalance extends Authenticated
     {
         $balance= new Balance($_POST);
         $balance->getTableFromDB();
-        $limits=Balance::getTodaysDate();
+
+
+        $limits=Balance::getTodaysDate();   
         View::renderTemplate('Balance/showBalance.html',[
             'firstLimit'=>$limits[0],
             'secondLimit'=>$limits[1]

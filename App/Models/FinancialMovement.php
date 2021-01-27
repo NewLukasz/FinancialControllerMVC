@@ -77,6 +77,16 @@ class FinancialMovement extends \Core\Model
         return $result['id'];
     }
 
+    public static function getCategoryOrMethodNameById($id, $tableWithData){
+        $sql="SELECT * FROM ".$tableWithData." WHERE id=:id";
+        $db=static::getDB();
+        $stmt=$db->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $result=$stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['name'];
+    }
+
     protected function addMovement($tableForData, $argumentsForBindValueFunction=[]){
         $this->validate();
         if(empty($this->errors)){
