@@ -51,6 +51,8 @@ class Balance extends \Core\Model
         $stmt=$db->prepare($sql);
         $stmt->execute();
 
+        
+
         $financialMovementsArray=[];
         while($result=$stmt->fetch(PDO::FETCH_ASSOC)){
             $financialMovementsArray[]=array(
@@ -62,45 +64,8 @@ class Balance extends \Core\Model
             );
         }
 
-        foreach($financialMovementsArray as $finacialMovement){
-            foreach($finacialMovement as $signleDataOfFinancialMovement){
-                echo $signleDataOfFinancialMovement."<br>";
-            }
-            echo '<br>';
-        }
-        exit();
-/*  
-        $financialMovements=$stmt->fetchAll();
-
-        var_dump($financialMovements);
-        echo '<br><br>';
         
-        $financialMovementsArray=[];
-        
-        foreach($financialMovements as $financialMovement){
-            var_dump($financialMovement);
-            echo '<br>';
-            $financialMovementsArray[]=array(
-                'id'=>$financialMovement['id'],
-                'amount'=>$financialMovement['amount'],
-                'source'=>FinancialMovement::getCategoryOrMethodNameById($financialMovement['income_category_assigned_to_user_id'],static::getUserTableWithIncomesCategory()),
-                'date'=>$financialMovement['date_of_income'],
-                'comment'=>$financialMovement['income_comment']
-            );
-
-            foreach($financialMovementsArray as $finacialMovement){
-                
-                foreach($finacialMovement as $signleDataOfFinancialMovement){
-                    echo $signleDataOfFinancialMovement."<br>";
-                }
-                echo '<br>';
-            }
-        exit();
-        }
-*/
-
-
-
+        return $this->table=$financialMovementsArray;
     }
 }
 

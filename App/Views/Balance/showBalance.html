@@ -3,11 +3,32 @@
 {% block title %}Balance{% endblock %}
 
 {% block footer %}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+        google.charts.load('current', {'packages':['table']});
+        google.charts.setOnLoadCallback(drawDetailedIncomeTable);
+
+        function drawDetailedIncomeTable() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Amount');
+		data.addColumn('string', 'Source');
+		data.addColumn('string', 'Date');
+        data.addColumn('string', 'Comment');
+        '{%for incomeData, income in detailedIncomeTable %}'
+        data.addRows([
+            ['{{income.amount}}','{{income.source}}', '{{income.date}}', '{{income.comment}}']
+        ]);
+        '{%endfor%}'
+        var table = new google.visualization.Table(document.getElementById('detailedIncomeTable'));
+		table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+        }
+</script>
+
+    
+
 {%endblock%}
 
 {% block body %}
-
-        
 
         <div class="container">
             <div class="row p-4">
@@ -69,10 +90,11 @@
             <h3 class="d-flex justify-content-center mt-3">Below detailed balances</h3>
             <div class="row p-4">
                 <div class="col-lg-6 mt-2">
-                    <div id="detailedIncomeTable"></div>
+                    <div id="detailedIncomeTable">Income table</div>
+                    
                 </div>
                 <div class="col-lg-6 mt-2 ">
-                    <div id="detailedExpenseTable"></div>
+                    <div id="detailedExpenseTable">Expense table</div>
                 </div>
             </div>
         </div>
