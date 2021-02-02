@@ -12,7 +12,8 @@ class ShowBalance extends Authenticated
     public function showBalanceAction()
     {
         $balance= new Balance($_POST);
-        $detailedIncomeTable=$balance->getTableFromDB();
+        $detailedIncomeTable=$balance->getDetailedIncomes();
+        $detailedExpenseTable=$balance->getDetailedExpenses();
 
         $testArray=[1,2,3,4,5,6];
 
@@ -20,7 +21,8 @@ class ShowBalance extends Authenticated
         View::renderTemplate('Balance/showBalance.html',[
             'firstLimit'=>$limits[0],
             'secondLimit'=>$limits[1],
-            'detailedIncomeTable'=>$detailedIncomeTable
+            'detailedIncomeTable'=>$detailedIncomeTable,
+            'detailedExpenseTable'=>$detailedExpenseTable
         ]);
     }
 
