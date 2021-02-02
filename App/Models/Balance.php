@@ -45,18 +45,30 @@ class Balance extends \Core\Model
     }
 
     public function getDetailedIncomes(){
-        return $this->getTableFromDB(static::getTableWithIncomes(),1);
+        return $this->getDetailedTableFromDB(static::getTableWithIncomes(),1);
     }
 
     public function getDetailedExpenses(){
-        return $this->getTableFromDB(static::getTableWithExpenses(),2);
+        return $this->getDetailedTableFromDB(static::getTableWithExpenses(),2);
     }
 
-    protected function getTableFromDB($table, $indicator){
-        /*Indicator - 1 - incomes, 2 - expenses, 3 - payments category */
+    protected function getDetailedTableFromDB($table, $indicator, $firstDateLimit=0, $secondDateLimit=0){
+        /*Indicator - 1 - incomes, 2 - expenses*/
         $db=static::getDB();
         $userId=$_SESSION['user_id'];
-        $sql="SELECT * FROM ".$table." WHERE user_id='".$userId."'";
+        if($firstDateLimit==0){
+            $firstDateLimit=(static::getTodaysDate())[0];
+        }
+        if($secondDateLimit==0){
+            $secondDateLimit=(static::getTodaysDate())[1];
+        }
+        
+        if($indicator==1){
+            $sql="SELECT * FROM ".$table." WHERE user_id='".$userId."' AND date_of_income> ' ".$firstDateLimit."' AND date_of_income< '". $secondDateLimit  ."'";
+        }elseif($indicator==2){
+            $sql="SELECT * FROM ".$table." WHERE user_id='".$userId."' AND date_of_expense> ' ".$firstDateLimit."' AND date_of_expense< '". $secondDateLimit  ."'";
+        }
+        
         $stmt=$db->prepare($sql);
         $stmt->execute();
 
@@ -84,8 +96,59 @@ class Balance extends \Core\Model
             }
 
         }
-        
         return $this->table=$financialMovementsArray;
+    }
+
+    protected static function getIncomeCategories(){
+        return static::getCategoriesOrPaymentMethodsAssignedToUser(static::getUserTableWithIncomesCategory());
+    }
+
+    public function getExpenseCategories(){
+        return static::getCategoriesOrPaymentMethodsAssignedToUser(static::getUserTableWithExpensesCategory());
+    }
+
+    public function countAmountDependsOnCategory($categoryArray=0, $table=0){
+        $incomeCategoriesId=static::getIncomeCategories();   
+        $incomeIdAndAmountValue=[];
+        foreach($incomeCategoriesId as $incomeCategoryId){
+
+            //echo $incomeCategoryId."<br>";
+
+            $db=static::getDB();
+            $userId=$_SESSION['user_id'];
+
+            $sql="SELECT income_category_assigned_to_user_id, SUM(amount) AS summary from incomes WHERE income_category_assigned_to_user_id=".$incomeCategoryId."";
+
+            $stmt=$db->prepare($sql);
+
+            $stmt->execute();
+
+            $result=$stmt->fetch();
+
+            //var_dump($result);
+           // echo "<br>";
+           if($result['summary']){
+                $incomeIdAndAmountValue[]=array(
+                    'id'=>$incomeCategoryId,
+                    'amount'=>$result['summary']
+                );
+           }
+        }   
+
+    }
+
+    protected static function getCategoriesOrPaymentMethodsAssignedToUser($table){
+        $db=static::getDB();
+        $userId=$_SESSION['user_id'];
+        $sql="SELECT * FROM ".$table." WHERE user_id='".$userId."'";
+        $stmt=$db->prepare($sql);
+        $stmt->execute();
+        $categoriesIdArray=[];
+        while($result=$stmt->fetch(PDO::FETCH_ASSOC)){
+            $categoriesIdArray[]=$result['id'];
+        }
+
+        return $categoriesIdArray;
     }
 
     
