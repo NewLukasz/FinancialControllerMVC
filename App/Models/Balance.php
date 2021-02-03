@@ -34,6 +34,10 @@ class Balance extends \Core\Model
         foreach ($data as $key => $value) {
             $this->$key = $value;
         };
+        if(!isset($this->firstLimitDate)){
+            $this->firstLimitDate=(static::getTodaysDate())[0];
+            $this->secondLimitDate=(static::getTodaysDate())[1];
+        }
     }
 
     public static function getTodaysDate(){
@@ -52,21 +56,15 @@ class Balance extends \Core\Model
         return $this->getDetailedTableFromDB(static::getTableWithExpenses(),2);
     }
 
-    protected function getDetailedTableFromDB($table, $indicator, $firstDateLimit=0, $secondDateLimit=0){
+    protected function getDetailedTableFromDB($table, $indicator){
         /*Indicator - 1 - incomes, 2 - expenses*/
         $db=static::getDB();
         $userId=$_SESSION['user_id'];
-        if($firstDateLimit==0){
-            $firstDateLimit=(static::getTodaysDate())[0];
-        }
-        if($secondDateLimit==0){
-            $secondDateLimit=(static::getTodaysDate())[1];
-        }
         
         if($indicator==1){
-            $sql="SELECT * FROM ".$table." WHERE user_id='".$userId."' AND date_of_income> ' ".$firstDateLimit."' AND date_of_income< '". $secondDateLimit  ."'";
+            $sql="SELECT * FROM ".$table." WHERE user_id='".$userId."' AND date_of_income> ' ".$this->firstLimitDate."' AND date_of_income< '".$this->secondLimitDate."'";
         }elseif($indicator==2){
-            $sql="SELECT * FROM ".$table." WHERE user_id='".$userId."' AND date_of_expense> ' ".$firstDateLimit."' AND date_of_expense< '". $secondDateLimit  ."'";
+            $sql="SELECT * FROM ".$table." WHERE user_id='".$userId."' AND date_of_expense> ' ".$this->firstLimitDate."' AND date_of_expense< '".$this->secondLimitDate."'";
         }
         
         $stmt=$db->prepare($sql);

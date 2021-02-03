@@ -12,10 +12,8 @@ class ShowBalance extends Authenticated
     public function showBalanceAction()
     {
         $balance= new Balance($_POST);
-        var_dump($_POST);
         View::renderTemplate('Balance/showBalance.html',[
-            'firstLimit'=>Balance::getTodaysDate()[0],
-            'secondLimit'=>Balance::getTodaysDate()[1],
+            'balance'=>$balance,
             'detailedIncomeTable'=>$balance->getDetailedIncomes(),
             'detailedExpenseTable'=>$balance->getDetailedExpenses(),
             'dataForIncomesCategoryChart'=>$balance->countAmountDependsOnCategory(),
