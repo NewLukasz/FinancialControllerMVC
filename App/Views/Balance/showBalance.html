@@ -40,6 +40,12 @@
 		table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
         }
 
+        var myModal = document.getElementById('myModal')
+        var myInput = document.getElementById('myInput')
+
+        myModal.addEventListener('shown.bs.modal', function () {
+        myInput.focus()
+        })
 </script>
 
     
@@ -47,7 +53,86 @@
 {%endblock%}
 
 {% block body %}
+        
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Change period of time</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="/showBalance/showBalance" method="post">
+        <div class="modal-body">
+
+
+          
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Type first limit date:</label>
+                    <div class="input-group mb-2">
+                      <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="icon-calendar"></i></span>
+                      </div>
+                      <input autocomplete="off"  name="fisrtLimitDate" id="datePickerFirstLimit" type="text" class="form-control" aria-label="Date">
+                    </div>
+                    <label>Type second limit date:</label>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="icon-calendar"></i></span>
+                      </div>
+                      <input autocomplete="off"  name="secondLimitDate" id="datePickerSecondLimit" type="text" class="form-control" aria-label="Date">
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6 d-flex justify-content-start w-50">
+                            <button type="submit" class="btn btn-primary m-1">Change</button>
+                        </div>
+                        <div class="col-xs-6 d-flex justify-content-end w-50">
+                            <button type="button" class="btn btn-secondary m-1" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+        </form>
+            
+      </div>
+    </div>
+  </div>
+
+
         <div class="container">
+            <!-- Button trigger modal -->
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-primary m-3 w-25" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Change period of time.
+                </button>
+            </div>
+            
             <div class="row p-4">
                 <div class="col-lg-12">
                     
