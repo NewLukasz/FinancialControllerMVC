@@ -110,8 +110,6 @@ class Balance extends \Core\Model
         $incomeIdAndAmountValue=[];
         foreach($incomeCategoriesId as $incomeCategoryId){
 
-            //echo $incomeCategoryId."<br>";
-
             $db=static::getDB();
             $userId=$_SESSION['user_id'];
 
@@ -123,8 +121,6 @@ class Balance extends \Core\Model
 
             $result=$stmt->fetch();
 
-            //var_dump($result);
-           // echo "<br>";
            if($result['summary']){
                 $incomeIdAndAmountValue[]=array(
                     'id'=>$incomeCategoryId,
