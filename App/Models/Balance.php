@@ -125,13 +125,18 @@ class Balance extends \Core\Model
 
             $result=$stmt->fetch();
 
+            //FinancialMovement::getCategoryOrMethodNameById($incomeCategoryId,static::getUserTableWithIncomesCategory())
+            
+            // 'id'=>$incomeCategoryId,
            if($result['summary']){
                 $incomeIdAndAmountValue[]=array(
-                    'id'=>$incomeCategoryId,
+                    'name'=>FinancialMovement::getCategoryOrMethodNameById($incomeCategoryId,static::getUserTableWithIncomesCategory()),
                     'amount'=>$result['summary']
                 );
            }
-        }   
+        }
+        
+        return $this->incomeIdAndAmountValue=$incomeIdAndAmountValue;
 
     }
 
@@ -145,10 +150,11 @@ class Balance extends \Core\Model
         while($result=$stmt->fetch(PDO::FETCH_ASSOC)){
             $categoriesIdArray[]=$result['id'];
         }
-
         return $categoriesIdArray;
     }
 
+
     
 }
+
 

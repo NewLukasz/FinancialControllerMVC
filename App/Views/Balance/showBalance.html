@@ -3,6 +3,11 @@
 {% block title %}Balance{% endblock %}
 
 {% block footer %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="/js/calendar.js"></script>
+
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
         google.charts.load('current', {'packages':['table']});
@@ -10,13 +15,14 @@
 
         function drawDetailedIncomeTable() {
         var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Amount');
+        data.addColumn('number', 'Amount');
 		data.addColumn('string', 'Source');
 		data.addColumn('string', 'Date');
         data.addColumn('string', 'Comment');
         '{%for incomeData, income in detailedIncomeTable %}'
+        var amount=parseFloat('{{income.amount}}');
         data.addRows([
-            ['{{income.amount}}','{{income.source}}', '{{income.date}}', '{{income.comment}}']
+            [amount,'{{income.source}}', '{{income.date}}', '{{income.comment}}']
         ]);
         '{%endfor%}'
         var table = new google.visualization.Table(document.getElementById('detailedIncomeTable'));
@@ -26,19 +32,58 @@
         google.charts.setOnLoadCallback(drawDetailedExpenseTable);
         function drawDetailedExpenseTable() {
         var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Amount');
+        data.addColumn('number', 'Amount');
 		data.addColumn('string', 'Reason');
 		data.addColumn('string', 'PaymentMethod');
         data.addColumn('string', 'Date');
         data.addColumn('string', 'Comment');
         '{%for expense in detailedExpenseTable %}'
+        var amount=parseFloat('{{expense.amount}}');
         data.addRows([
-            ['{{expense.amount}}','{{expense.reason}}', '{{expense.paymentMethod}}', '{{expense.date}}','{{expense.comment}}']
+            [amount,'{{expense.reason}}', '{{expense.paymentMethod}}', '{{expense.date}}','{{expense.comment}}']
         ]);
         '{%endfor%}'
         var table = new google.visualization.Table(document.getElementById('detailedExpenseTable'));
 		table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
         }
+
+
+        //circle chart below
+        google.charts.load('current', {'packages':['corechart']});
+
+        // Set a callback to run when the Google Visualization API is loaded.
+        google.charts.setOnLoadCallback(drawExpenseChartAndTable);
+
+        // Callback that creates and populates a data table,
+        // instantiates the pie chart, passes in the data and
+        // draws it.
+        function drawExpenseChartAndTable() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Category');
+        data.addColumn('number', 'Amount');
+        '{%for data in dataForIncomesCategoryChart %}'
+        var amount=parseFloat('{{ data.amount }}')
+        data.addRows([
+            ['{{data.name}}',amount]
+        ]);
+        '{%endfor%}'
+
+        // Set chart options
+        var options = {'title':'Categories of incomes',
+                        'width':'100%',
+                        'height':'100%'};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('IncomesPiechart'));
+        chart.draw(data, options);
+
+        var table = new google.visualization.Table(document.getElementById('incomesCategoryTable'));
+        table.draw(data, {'width':400});
+
+        }
+        //circle chart end
 
         var myModal = document.getElementById('myModal')
         var myInput = document.getElementById('myInput')
@@ -47,17 +92,11 @@
         myInput.focus()
         })
 </script>
-
-    
-
 {%endblock%}
 
-{% block body %}
-        
-
-  
+{% block body %}  
   <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="ChangePeriodsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -65,37 +104,22 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form action="/showBalance/showBalance" method="post">
-        <div class="modal-body">
-
-
-          
+            <div class="modal-body">
                 <div class="form-group">
-
-                        
                     <label>Type first limit date:</label>
                     <div class="input-group mb-2">
-                      <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="icon-calendar"></i></span>
-                      </div>
-                      <input autocomplete="off"  name="fisrtLimitDate" id="datePickerFirstLimit" type="text" class="form-control" aria-label="Date">
+                        <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="icon-calendar"></i></span>
+                        </div>
+                        <input autocomplete="off" value='{{balance.firstLimitDate}}'  name="fisrtLimitDate" id="datePickerFirstLimit" type="text" class="form-control" aria-label="Date">
                     </div>
-                    
-                    
-
-                    
-                        
                     <label>Type second limit date:</label>
                     <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="icon-calendar"></i></span>
-                      </div>
-                      <input autocomplete="off"  name="secondLimitDate" id="datePickerSecondLimit" type="text" class="form-control" aria-label="Date">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="icon-calendar"></i></span>
+                        </div>
+                        <input autocomplete="off" value='{{balance.secondLimitDate}}'  name="secondLimitDate" id="datePickerSecondLimit" type="text" class="form-control" aria-label="Date">
                     </div>
-
-                    
-                    
-
-
                     <div class="row">
                         <div class="col-xs-4 d-flex justify-content-start w-50">
                             <button type="submit" class="btn btn-primary m-1">Change</button>
@@ -104,110 +128,88 @@
                             <button type="button" class="btn btn-secondary m-1" data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
-
-                    
                 </div>
-      
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        </div>
+            </div>
         </form>
-            
       </div>
     </div>
   </div>
+<div class="container">
 
-
-        <div class="container">
-            <!-- Button trigger modal -->
-            <div class="d-flex justify-content-end">
-                <button type="button" class="btn btn-primary m-3 w-25" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Change period of time.
-                </button>
+    <!-- Button trigger modal -->
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary m-3 w-25" data-bs-toggle="modal" data-bs-target="#ChangePeriodsModal">
+            Change period of time.
+        </button>
+    </div>
+    
+    <div class="row p-4">
+        <div class="col-lg-12">
+            
+            <div class="d-flex justify-content-center">
+            <h1>Balance from {{balance.firstLimitDate}} to {{balance.secondLimitDate}}</h1>
             </div>
             
-            <div class="row p-4">
-                <div class="col-lg-12">
-                    
-                    <div class="d-flex justify-content-center">
-                    <h1>Balance from {{balance.firstLimitDate}} to {{balance.secondLimitDate}}</h1>
-                    </div>
-                    
-                </div>
-                <div class="col-lg-12">
-                    
-                    <div class="d-flex justify-content-center">
-                  
-                    </div>
-                    
-                </div>
-                <div class="col-lg-12">
-                    
-                    <div class="d-flex justify-content-center mt-3">
-                    <h2>Balance of incomes and expenses in case of category below:</h2>
-                    </div>
-                    
-                </div>
+        </div>
+        <div class="col-lg-12">
+            
+            <div class="d-flex justify-content-center">
                 
             </div>
+            
+        </div>
+        <div class="col-lg-12">
+            
+            <div class="d-flex justify-content-center mt-3">
+            <h2>Balance of incomes and expenses in case of category below:</h2>
+            </div>
+            
         </div>
         
-        <!--Income balance - tylko przychody-->
-        <div class="container" style="border: 1px solid black;">
-            <h3 class="d-flex justify-content-center mt-3">Incomes balance</h3>
-            <div class="row p-2">
-                <div class="col-lg-6 d-flex justify-content-center mt-3">
-                    <div id="incomesCategoryTable"></div>
-                </div>
-                <div class="col-lg-6 d-flex justify-content-center">
-                    <div id="IncomesPiechart" style="width: 500px; height: 300px;"></div>
-                </div>
-            </div>
+    </div>
+</div>
+
+<!--Income balance - tylko przychody-->
+<div class="container" style="border: 1px solid black;">
+    <h3 class="d-flex justify-content-center mt-3">Incomes balance</h3>
+    <div class="row p-2">
+        <div class="col-lg-6 d-flex justify-content-center mt-3">
+            <div id="incomesCategoryTable"></div>
         </div>
-
-        <!--Expense balance - tylko wydatki -->
-        <div class="container mt-3" style="border: 1px solid black;">
-            <h3 class="d-flex justify-content-center mt-3">Expenses balance</h3>
-            <div class="row p-2">
-                <div class="col-lg-6 d-flex justify-content-center">
-                    <div id="expensesCategoryTable"></div>
-                </div>
-                <div class="col-lg-6 d-flex justify-content-center">
-                    <div id="ExpensePiechart" style="width: 500px; height: 300px;"></div>
-                </div>
-            </div>
+        <div class="col-lg-6 d-flex justify-content-center">
+            <div id="IncomesPiechart" style="width: 500px; height: 300px;"></div>
         </div>
+    </div>
+</div>
 
-
-
-        <!--Szczegolowe dane - trzecia tabela -->
-        <div class="container mt-5" style="border: 1px solid black;">
-            <h3 class="d-flex justify-content-center mt-3">Below detailed balances</h3>
-            <div class="row p-4">
-                <div class="col-lg-6 mt-2">
-                    <div id="detailedIncomeTable">Income table</div>
-                    
-                </div>
-                <div class="col-lg-6 mt-2 ">
-                    <div id="detailedExpenseTable">Expense table</div>
-                </div>
-            </div>
+<!--Expense balance - tylko wydatki -->
+<div class="container mt-3" style="border: 1px solid black;">
+    <h3 class="d-flex justify-content-center mt-3">Expenses balance</h3>
+    <div class="row p-2">
+        <div class="col-lg-6 d-flex justify-content-center mt-3">
+            <div id="expensesCategoryTable"></div>
         </div>
+        <div class="col-lg-6 d-flex justify-content-center">
+            <div id="ExpensePiechart" style="width: 500px; height: 300px;"></div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--Szczegolowe dane - trzecia tabela -->
+<div class="container mt-5" style="border: 1px solid black;">
+    <h3 class="d-flex justify-content-center mt-3">Below detailed balances</h3>
+    <div class="row p-4">
+        <div class="col-lg-6 mt-2">
+            <div id="detailedIncomeTable">Income table</div>
+            
+        </div>
+        <div class="col-lg-6 mt-2 ">
+            <div id="detailedExpenseTable">Expense table</div>
+        </div>
+    </div>
+</div>
 
 
 {% endblock %}
