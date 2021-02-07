@@ -116,18 +116,14 @@ class Balance extends \Core\Model
 
             $db=static::getDB();
             $userId=$_SESSION['user_id'];
+            $sql="SELECT income_category_assigned_to_user_id, SUM(amount) AS summary from incomes WHERE income_category_assigned_to_user_id=".$incomeCategoryId." AND date_of_income> '".$this->firstLimitDate."' AND date_of_income< '".$this->secondLimitDate."'";
 
-            $sql="SELECT income_category_assigned_to_user_id, SUM(amount) AS summary from incomes WHERE income_category_assigned_to_user_id=".$incomeCategoryId."";
 
             $stmt=$db->prepare($sql);
 
             $stmt->execute();
 
             $result=$stmt->fetch();
-
-            //FinancialMovement::getCategoryOrMethodNameById($incomeCategoryId,static::getUserTableWithIncomesCategory())
-            
-            // 'id'=>$incomeCategoryId,
            if($result['summary']){
                 $incomeIdAndAmountValue[]=array(
                     'name'=>FinancialMovement::getCategoryOrMethodNameById($incomeCategoryId,static::getUserTableWithIncomesCategory()),
