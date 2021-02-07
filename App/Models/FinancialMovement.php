@@ -85,7 +85,9 @@ class FinancialMovement extends \Core\Model
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $result=$stmt->fetch(PDO::FETCH_ASSOC);
-        return $result['name'];
+        if(isset($result['name'])){
+            return $result['name'];
+        }
     }
 
     protected function addMovement($tableForData, $argumentsForBindValueFunction=[]){

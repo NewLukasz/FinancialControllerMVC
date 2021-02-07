@@ -12,12 +12,13 @@ class ShowBalance extends Authenticated
     public function showBalanceAction()
     {
         $balance= new Balance($_POST);
-        
+
         View::renderTemplate('Balance/showBalance.html',[
             'balance'=>$balance,
             'detailedIncomeTable'=>$balance->getDetailedIncomes(),
             'detailedExpenseTable'=>$balance->getDetailedExpenses(),
-            'dataForIncomesCategoryChart'=>$balance->countAmountDependsOnCategory()
+            'dataForIncomesCategoryChart'=>$balance->countAmountDependsOnCategoryOfIncomes(),
+            'dataForExpensesCategoryChart'=>$balance->countAmountDependsOnCategoryOfExpenses()
         ]);
     }
 }

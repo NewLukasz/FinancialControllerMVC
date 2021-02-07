@@ -66,16 +66,13 @@ class Balance extends \Core\Model
         $userId=$_SESSION['user_id'];
         
         if($indicator==1){
-            $sql="SELECT * FROM ".$table." WHERE user_id='".$userId."' AND date_of_income> ' ".$this->firstLimitDate."' AND date_of_income< '".$this->secondLimitDate."'";
+            $sql="SELECT * FROM ".$table." WHERE user_id='".$userId."' AND date_of_income>= ' ".$this->firstLimitDate."' AND date_of_income<= '".$this->secondLimitDate."'";
         }elseif($indicator==2){
-            $sql="SELECT * FROM ".$table." WHERE user_id='".$userId."' AND date_of_expense> ' ".$this->firstLimitDate."' AND date_of_expense< '".$this->secondLimitDate."'";
+            $sql="SELECT * FROM ".$table." WHERE user_id='".$userId."' AND date_of_expense>= ' ".$this->firstLimitDate."' AND date_of_expense<= '".$this->secondLimitDate."'";
         }
-        
         $stmt=$db->prepare($sql);
         $stmt->execute();
-
         $financialMovementsArray=[];
-        
         while($result=$stmt->fetch(PDO::FETCH_ASSOC)){
             if($indicator==1){
                 $financialMovementsArray[]=array(
@@ -109,33 +106,36 @@ class Balance extends \Core\Model
         return static::getCategoriesOrPaymentMethodsAssignedToUser(static::getUserTableWithExpensesCategory());
     }
 
-    public function countAmountDependsOnCategory($categoryArray=0, $table=0){
-        $incomeCategoriesId=static::getIncomeCategories();   
-        $incomeIdAndAmountValue=[];
-        foreach($incomeCategoriesId as $incomeCategoryId){
+    public function countAmountDependsOnCategoryOfIncomes(){
+        return $this->categoriesAndAmountOfIncomes=$this->countAmountDependsOnCategory(static::getIncomeCategories(),static::getUserTableWithIncomesCategory(),1);
+    }
 
+    public function countAmountDependsOnCategoryOfExpenses(){
+        return $this->categoriesAndAmountOfExpenses=$this->countAmountDependsOnCategory(static::getExpenseCategories(), static::getUserTableWithExpensesCategory(),2);
+    }
+
+    protected function countAmountDependsOnCategory($categoriesId=0, $table=0, $indicator=1){
+        /*Indicator - 1 - incomes, 2 - expenses*/
+        $categoryNameAndAmountValue=[];
+        foreach($categoriesId as $categoryId){
             $db=static::getDB();
-            $userId=$_SESSION['user_id'];
-            $sql="SELECT income_category_assigned_to_user_id, SUM(amount) AS summary from incomes WHERE income_category_assigned_to_user_id=".$incomeCategoryId." AND date_of_income> '".$this->firstLimitDate."' AND date_of_income< '".$this->secondLimitDate."'";
-
-
+            if($indicator==1){
+                $sql="SELECT SUM(amount) AS summary from incomes WHERE income_category_assigned_to_user_id='".$categoryId."' AND date_of_income>= '".$this->firstLimitDate."' AND date_of_income<= '".$this->secondLimitDate."'";
+            }else{
+                $sql="SELECT SUM(amount) AS summary from expenses WHERE expense_category_assigned_to_user_id='".$categoryId."' AND date_of_expense>= '".$this->firstLimitDate."' AND date_of_expense<= '".$this->secondLimitDate."'";
+            }
             $stmt=$db->prepare($sql);
-
             $stmt->execute();
-
             $result=$stmt->fetch();
            if($result['summary']){
-                $incomeIdAndAmountValue[]=array(
-                    'name'=>FinancialMovement::getCategoryOrMethodNameById($incomeCategoryId,static::getUserTableWithIncomesCategory()),
+                $categoryNameAndAmountValue[]=array(
+                    'name'=>FinancialMovement::getCategoryOrMethodNameById($categoryId,$table),
                     'amount'=>$result['summary']
                 );
            }
         }
-        
-        return $this->incomeIdAndAmountValue=$incomeIdAndAmountValue;
-
+        return $categoryNameAndAmountValue;
     }
-
     protected static function getCategoriesOrPaymentMethodsAssignedToUser($table){
         $db=static::getDB();
         $userId=$_SESSION['user_id'];
@@ -148,9 +148,6 @@ class Balance extends \Core\Model
         }
         return $categoriesIdArray;
     }
-
-
-    
 }
 
 

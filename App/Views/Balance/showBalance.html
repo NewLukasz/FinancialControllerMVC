@@ -7,11 +7,17 @@
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="/js/calendar.js"></script>
+<script src="/js/balances.js"></script>
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
+
         google.charts.load('current', {'packages':['table']});
+        google.charts.load('current', {'packages':['corechart']});
         google.charts.setOnLoadCallback(drawDetailedIncomeTable);
+        google.charts.setOnLoadCallback(drawIncomeChartAndTable);
+        google.charts.setOnLoadCallback(drawExpenseChartAndTable);
+        google.charts.setOnLoadCallback(drawDetailedExpenseTable);
 
         function drawDetailedIncomeTable() {
         var data = new google.visualization.DataTable();
@@ -29,7 +35,6 @@
 		table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
         }
 
-        google.charts.setOnLoadCallback(drawDetailedExpenseTable);
         function drawDetailedExpenseTable() {
         var data = new google.visualization.DataTable();
         data.addColumn('number', 'Amount');
@@ -47,11 +52,7 @@
 		table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
         }
 
-
-        google.charts.load('current', {'packages':['corechart']});
-        google.charts.setOnLoadCallback(drawExpenseChartAndTable);
-        function drawExpenseChartAndTable() {
-        // Create the data table.
+        function drawIncomeChartAndTable() {
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Category');
         data.addColumn('number', 'Amount');
@@ -70,6 +71,27 @@
         var table = new google.visualization.Table(document.getElementById('incomesCategoryTable'));
         table.draw(data, {'width':400});
         }
+
+        function drawExpenseChartAndTable() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Category');
+        data.addColumn('number', 'Amount');
+        '{%for data in dataForExpensesCategoryChart %}'
+        var amount=parseFloat('{{ data.amount }}')
+        data.addRows([
+            ['{{data.name}}',amount]
+        ]);
+        '{%endfor%}'
+        var options = {'title':'Categories of expenses',
+                        'width':'100%',
+                        'height':'100%'};
+
+        var chart = new google.visualization.PieChart(document.getElementById('ExpensePiechart'));
+        chart.draw(data, options);
+        var table = new google.visualization.Table(document.getElementById('expensesCategoryTable'));
+        table.draw(data, {'width':400});
+        }
+
         var myModal = document.getElementById('myModal')
         var myInput = document.getElementById('myInput')
 
@@ -80,7 +102,6 @@
 {%endblock%}
 
 {% block body %}  
-  <!-- Modal -->
 <div class="modal fade" id="ChangePeriodsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -120,8 +141,6 @@
     </div>
   </div>
 <div class="container">
-
-    <!-- Button trigger modal -->
     <div class="d-flex justify-content-end">
         <button type="button" class="btn btn-primary m-3 w-25" data-bs-toggle="modal" data-bs-target="#ChangePeriodsModal">
             Change period of time.
@@ -154,7 +173,6 @@
     </div>
 </div>
 
-<!--Income balance - tylko przychody-->
 <div class="container" style="border: 1px solid black;">
     <h3 class="d-flex justify-content-center mt-3">Incomes balance</h3>
     <div class="row p-2">
@@ -167,7 +185,6 @@
     </div>
 </div>
 
-<!--Expense balance - tylko wydatki -->
 <div class="container mt-3" style="border: 1px solid black;">
     <h3 class="d-flex justify-content-center mt-3">Expenses balance</h3>
     <div class="row p-2">
@@ -181,16 +198,15 @@
 </div>
 
 
-
-<!--Szczegolowe dane - trzecia tabela -->
 <div class="container mt-5" style="border: 1px solid black;">
     <h3 class="d-flex justify-content-center mt-3">Below detailed balances</h3>
     <div class="row p-4">
         <div class="col-lg-6 mt-2">
+            <h6 class="d-flex justify-content-center mt-3">Incomes<h6>
             <div id="detailedIncomeTable">Income table</div>
-            
         </div>
         <div class="col-lg-6 mt-2 ">
+            <h6 class="d-flex justify-content-center mt-3">Expenses<h6></h6>
             <div id="detailedExpenseTable">Expense table</div>
         </div>
     </div>
