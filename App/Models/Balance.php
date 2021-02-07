@@ -38,6 +38,10 @@ class Balance extends \Core\Model
             $this->firstLimitDate=(static::getTodaysDate())[0];
             $this->secondLimitDate=(static::getTodaysDate())[1];
         }
+        if(isset($_POST['fisrtLimitDate'])){
+            $this->firstLimitDate=$_POST['fisrtLimitDate'];
+            $this->secondLimitDate=$_POST['secondLimitDate'];
+        }
     }
 
     public static function getTodaysDate(){

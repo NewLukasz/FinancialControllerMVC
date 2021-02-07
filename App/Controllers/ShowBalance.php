@@ -12,10 +12,11 @@ class ShowBalance extends Authenticated
     public function showBalanceAction()
     {
         $balance= new Balance($_POST);
-        var_dump($_POST);
+        //var_dump($_POST);
+        /*
         if(isset($_POST['fisrtLimitDate'])){
             echo "<br>".$_POST['fisrtLimitDate'];
-        }
+        }*/
         View::renderTemplate('Balance/showBalance.html',[
             'balance'=>$balance,
             'detailedIncomeTable'=>$balance->getDetailedIncomes(),
