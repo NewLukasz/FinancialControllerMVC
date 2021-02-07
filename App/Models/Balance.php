@@ -42,6 +42,11 @@ class Balance extends \Core\Model
             $this->firstLimitDate=$_POST['fisrtLimitDate'];
             $this->secondLimitDate=$_POST['secondLimitDate'];
         }
+
+        $this->getSummaryOfExpenses();
+        $this->getSummaryOfIncomes();
+        $this->difference=$this->getSummaryOfIncomes()-$this->getSummaryOfExpenses();
+        $this->getCommentAboutDifference();
     }
 
     public static function getTodaysDate(){
@@ -52,12 +57,38 @@ class Balance extends \Core\Model
         return $rangeForBalanceFromCurrentMounth=array($dateWithFirstDayOfCurrentMounth,$dateWithLastDayOfCurrentMounth);
     }
 
+    public function getCommentAboutDifference(){
+        if($this->difference>=0){
+            $this->commentAboutDifference='Your incomes is equal or greater than expenses. Good job';
+        }else{
+            $this->commentAboutDifference='Your expenses exceed incomes. Change your financial strategy.';
+        }
+    }
+
     public function getDetailedIncomes(){
         return $this->getDetailedTableFromDB(static::getTableWithIncomes(),1);
     }
 
     public function getDetailedExpenses(){
         return $this->getDetailedTableFromDB(static::getTableWithExpenses(),2);
+    }
+
+    public function getSummaryOfExpenses(){
+        $arrayWithExpenses=$this->getDetailedTableFromDB(static::getTableWithExpenses(),2);
+        $summary=0;
+        foreach($arrayWithExpenses as $data){
+            $summary+=$data['amount'];
+        }
+        return $this->summaryOfExpenses=$summary;
+    }
+
+    public function getSummaryOfIncomes(){
+        $arrayWithIncomes=$this->getDetailedTableFromDB(static::getTableWithIncomes(),1);
+        $summary=0;
+        foreach($arrayWithIncomes as $data){
+            $summary+=$data['amount'];
+        }
+        return $this->summaryOfIncomes=$summary;
     }
 
     protected function getDetailedTableFromDB($table, $indicator){
