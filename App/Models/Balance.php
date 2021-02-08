@@ -31,6 +31,7 @@ class Balance extends \Core\Model
      */
     public function __construct($data = [])
     {
+
         foreach ($data as $key => $value) {
             $this->$key = $value;
         };
@@ -41,7 +42,7 @@ class Balance extends \Core\Model
         $this->getCommentAboutDifference();
     }
 
-    protected function definitionDatesForBalanceBasedOnPressedButtons(){
+    public function definitionDatesForBalanceBasedOnPressedButtons(){
         if(isset($_POST['customPeriodOfTime'])){
             $_SESSION['customPeriodOfTime']=$_POST['customPeriodOfTime'];
         }
@@ -50,9 +51,10 @@ class Balance extends \Core\Model
             $this->secondLimitDate=(static::getTodaysDate())[1];
         }
         if(isset($_POST['fisrtLimitDate'])){
-            $this->firstLimitDate=$_POST['fisrtLimitDate'];
-            $this->secondLimitDate=$_POST['secondLimitDate'];
-            unset($_POST['fisrtLimitDate']);
+            
+                $this->firstLimitDate=$_POST['fisrtLimitDate'];
+                $this->secondLimitDate=$_POST['secondLimitDate'];
+            
         }
         elseif(isset($_POST['currentMonth'])){
             $this->firstLimitDate=(static::getTodaysDate())[0];
@@ -70,6 +72,24 @@ class Balance extends \Core\Model
         }
     }
 
+    public function validateDates(){
+       $flag=true;
+       if(!FinancialMovement::checkIsAValidDate($this->firstLimitDate)){
+            $this->errors[]="First limit is invalid.";
+            $flag=false;
+            
+       }
+       if(!FinancialMovement::checkIsAValidDate($this->secondLimitDate)){
+            $this->errors[]="Second limit is invalid.";
+            $flag=false;
+        }
+        if(strtotime($this->firstLimitDate)>strtotime($this->secondLimitDate)){
+            $this->errors[]="First limit is greater than second.";
+            $flag=false;
+        }
+        return $flag;
+    }
+
     protected static function getDateWithPreviousMonthWithLastDay($date){
         return date('Y-m-d', strtotime('last day of last month',strtotime($date)));
     }
@@ -84,6 +104,11 @@ class Balance extends \Core\Model
         $dateWithLastDayOfCurrentMounth=$d->format('Y-m-t');
         
         return $rangeForBalanceFromCurrentMounth=array($dateWithFirstDayOfCurrentMounth,$dateWithLastDayOfCurrentMounth);
+    }
+
+    public function setDatesToCurrentMonth(){
+        $this->firstLimitDate=static::getTodaysDate()[0];
+        $this->secondLimitDate=static::getTodaysDate()[1];
     }
 
     public function getCommentAboutDifference(){

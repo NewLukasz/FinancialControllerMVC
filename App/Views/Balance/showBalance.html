@@ -142,7 +142,18 @@
     </div>
   </div>
 </div>
+
 <div class="container">
+    {% if balance.errors is not empty %}
+    <div class="container d-flex justify-content-center">
+        <p>Error:</p>
+        <ul>
+            {% for error in balance.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
     <div class="row d-flex justify-content-center">
         <div class="col-lg-4">
             <form action="/showBalance/showBalance" method="post" style="width: 100%;" class="mx-1 p-1">
