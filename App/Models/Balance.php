@@ -36,6 +36,10 @@ class Balance extends \Core\Model
             $this->$key = $value;
         };
         $this->definitionDatesForBalanceBasedOnPressedButtons();
+        
+    }
+
+    public function countingHeaderOfBalance(){
         $this->getSummaryOfExpenses();
         $this->getSummaryOfIncomes();
         $this->difference=$this->getSummaryOfIncomes()-$this->getSummaryOfExpenses();

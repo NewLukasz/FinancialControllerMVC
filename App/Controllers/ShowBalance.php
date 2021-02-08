@@ -18,6 +18,7 @@ class ShowBalance extends Authenticated
                 Flash::addMessage("Balance limits dates did not change.",'warning');
             }
         }
+        $balance->countingHeaderOfBalance();
         View::renderTemplate('Balance/showBalance.html',[
             'balance'=>$balance,
             'detailedIncomeTable'=>$balance->getDetailedIncomes(),
@@ -25,5 +26,6 @@ class ShowBalance extends Authenticated
             'dataForIncomesCategoryChart'=>$balance->countAmountDependsOnCategoryOfIncomes(),
             'dataForExpensesCategoryChart'=>$balance->countAmountDependsOnCategoryOfExpenses()
         ]);
+        
     }
 }
