@@ -36,7 +36,6 @@ class Balance extends \Core\Model
             $this->$key = $value;
         };
         $this->definitionDatesForBalanceBasedOnPressedButtons();
-        
     }
 
     public function countingHeaderOfBalance(){
