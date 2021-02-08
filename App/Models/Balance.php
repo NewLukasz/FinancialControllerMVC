@@ -34,6 +34,17 @@ class Balance extends \Core\Model
         foreach ($data as $key => $value) {
             $this->$key = $value;
         };
+        $this->definitionDatesForBalanceBasedOnPressedButtons();
+        $this->getSummaryOfExpenses();
+        $this->getSummaryOfIncomes();
+        $this->difference=$this->getSummaryOfIncomes()-$this->getSummaryOfExpenses();
+        $this->getCommentAboutDifference();
+    }
+
+    protected function definitionDatesForBalanceBasedOnPressedButtons(){
+        if(isset($_POST['customPeriodOfTime'])){
+            $_SESSION['customPeriodOfTime']=$_POST['customPeriodOfTime'];
+        }
         if(!isset($this->firstLimitDate)){
             $this->firstLimitDate=(static::getTodaysDate())[0];
             $this->secondLimitDate=(static::getTodaysDate())[1];
@@ -41,12 +52,30 @@ class Balance extends \Core\Model
         if(isset($_POST['fisrtLimitDate'])){
             $this->firstLimitDate=$_POST['fisrtLimitDate'];
             $this->secondLimitDate=$_POST['secondLimitDate'];
+            unset($_POST['fisrtLimitDate']);
         }
+        elseif(isset($_POST['currentMonth'])){
+            $this->firstLimitDate=(static::getTodaysDate())[0];
+            $this->secondLimitDate=(static::getTodaysDate())[1];
+            unset($_POST['currentMonth']);
+        }elseif(isset($_POST['previousMonth'])){
+            if(isset($_SESSION['customPeriodOfTime'])){
+                $this->firstLimitDate=(static::getTodaysDate())[0];
+                $this->secondLimitDate=(static::getTodaysDate())[1];
+                unset($_SESSION['customPeriodOfTime']);
+            }
+            $temporatyDate=$this->firstLimitDate;
+            $this->firstLimitDate=static::getDateWithPreviousMonthWithFirstDay($this->firstLimitDate);
+            $this->secondLimitDate=static::getDateWithPreviousMonthWithLastDay($temporatyDate);
+        }
+    }
 
-        $this->getSummaryOfExpenses();
-        $this->getSummaryOfIncomes();
-        $this->difference=$this->getSummaryOfIncomes()-$this->getSummaryOfExpenses();
-        $this->getCommentAboutDifference();
+    protected static function getDateWithPreviousMonthWithLastDay($date){
+        return date('Y-m-d', strtotime('last day of last month',strtotime($date)));
+    }
+
+    protected static function getDateWithPreviousMonthWithFirstDay($date){
+        return date('Y-m-d', strtotime('first day of last month',strtotime($date)));
     }
 
     public static function getTodaysDate(){
