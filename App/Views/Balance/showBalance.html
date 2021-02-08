@@ -110,6 +110,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form action="/showBalance/showBalance" method="post">
+            <input type='hidden' name='customPeriodOfTime' value='true'>
             <div class="modal-body">
                 <div class="form-group">
                     <label>Type first limit date:</label>
@@ -145,14 +146,15 @@
     <div class="row d-flex justify-content-center">
         <div class="col-lg-4">
             <form action="/showBalance/showBalance" method="post" style="width: 100%;" class="mx-1 p-1">
-                <button type="button" class="btn btn-primary m-2">
-                    Current month
-                </button>
-    
-        </form>
+            <input type='hidden' name='currentMonth' value='true'>
+            <button type="submit" class="btn btn-primary m-2">
+                Current month
+            </button>
+            </form>
         </div>
         <div class="col-lg-4">
             <form action="/showBalance/showBalance" method="post" style="width: 100%;" class="mx-1 p-1">
+                <input type='hidden' name='previousMonth' value='true'>
                 <button type="submit" class="btn btn-primary m-2" >
                     Previous month
                 </button>
