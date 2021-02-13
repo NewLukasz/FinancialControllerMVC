@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '52c76ce0ecae0e2dacef660200ce335591b060d4',
+    'reference' => '1fa4d1c52558ac1ff8368655d56a1e9015610e9b',
     'name' => '__root__',
   ),
   'versions' => 
@@ -18,7 +18,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '52c76ce0ecae0e2dacef660200ce335591b060d4',
+      'reference' => '1fa4d1c52558ac1ff8368655d56a1e9015610e9b',
     ),
     'guzzlehttp/guzzle' => 
     array (
@@ -107,6 +107,15 @@
       array (
       ),
       'reference' => '4c4c1f9b7289a2ec57cde7f1e9762a5789506f88',
+    ),
+    'phpmailer/phpmailer' => 
+    array (
+      'pretty_version' => 'v6.2.0',
+      'version' => '6.2.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'e38888a75c070304ca5514197d4847a59a5c853f',
     ),
     'psr/http-client' => 
     array (

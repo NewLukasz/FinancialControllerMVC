@@ -3,7 +3,9 @@
 namespace App;
 
 use App\Config;
-use Mailgun\Mailgun;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
 /**
  * Mail
@@ -25,13 +27,28 @@ class Mail
      */
     public static function send($to, $subject, $text, $html)
     {
-        $mg = new Mailgun(Config::MAILGUN_API_KEY);
-        $domain = Config::MAILGUN_DOMAIN;
 
-        $mg->sendMessage($domain, ['from'    => 'your-sender@your-domain.com',
-                                   'to'      => $to,
-                                   'subject' => $subject,
-                                   'text'    => $text,
-                                   'html'    => $html]);
+        $mail = new PHPMailer(true);
+
+        try {                    
+            $mail->isSMTP();                                           
+            $mail->Host       = Config::HOST;                   
+            $mail->SMTPAuth   = true;                        
+            $mail->Username   = Config::DOMAIN_USERNAME;        
+            $mail->Password   = Config::DOMAIN_PASSWORD;         
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;        
+            $mail->Port       = 587;                                 
+
+            $mail->setFrom(Config::DOMAIN_USERNAME, 'Financial Controller');
+            $mail->addAddress($to);  
+            $mail->isHTML(true);                                
+            $mail->Subject = $subject;
+            $mail->Body    = $html;
+            $mail->AltBody = $text;
+
+            $mail->send();
+        } catch (Exception $e) {
+            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        }
     }
 }
