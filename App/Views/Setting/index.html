@@ -17,12 +17,13 @@
           
               <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#settings">
                 <div class="card-body">
-                    <ul>
-                        <li>Pierwsza kategoria</li>
-                        <li>Druga kategoria</li>
-                        <li>Trzecia kategoria</li>
-                        <li>Czwarta kategoria</li>
-                    </ul>
+                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group-vertical mr-2  w-100" role="group" aria-label="First group">
+                          {%for incomeCategoriesName in setting.incomeCategoriesNames %}
+                          <button type="button" class="btn btn-secondary">{{incomeCategoriesName}}</button>
+                          {%endfor%}
+                        </div>
+                    </div>
                 </div>
               </div>
             </div>
@@ -89,6 +90,10 @@
               </div>
           </div>
     </div>
+
+
+
+    
 
     
 {% endblock %}

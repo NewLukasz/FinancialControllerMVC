@@ -186,7 +186,7 @@ class Balance extends \Core\Model
         return $this->table=$financialMovementsArray;
     }
 
-    protected static function getIncomeCategories(){
+    public static function getIncomeCategories(){
         return static::getCategoriesOrPaymentMethodsAssignedToUser(static::getUserTableWithIncomesCategory());
     }
 

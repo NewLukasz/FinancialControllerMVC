@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use \Core\View;
+use App\Models\Settings;
 
 class Setting extends Authenticated
 {
@@ -26,7 +27,10 @@ class Setting extends Authenticated
      */
     public function indexAction()
     {
-        View::renderTemplate('Setting/index.html');
+        $setting=new Settings($_POST);
+        View::renderTemplate('Setting/index.html',[
+            'setting'=>$setting
+        ]);
     }
 
     /**
