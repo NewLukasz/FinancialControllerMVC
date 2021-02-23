@@ -18,11 +18,7 @@
 
   $(".edit").click(function(){
     var ABC= $(this).attr('value');
-    $('#editCategory').on('shown.bs.modal', function () {
     $("#categoryNameHeader").html(ABC);
-})
-    
-    
   });
 
   
@@ -98,7 +94,9 @@
                         <div class="btn-group-vertical mr-2  w-100" role="group" aria-label="First group">
                           {%for incomeCategoriesName in setting.incomeCategoriesNames %}
                           <div class="mx-auto">
-                            {{incomeCategoriesName}}     <button type="button" id={{incomeCategoriesName}} value={{incomeCategoriesName}} class="btn btn-link edit" style="font-size:12px;" data-toggle="modal" data-target="#editCategory">Edit</button>
+                            {{incomeCategoriesName}}     
+                            <button type="button" id={{incomeCategoriesName}} value={{incomeCategoriesName}} class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editCategory"><i class="icon-pencil-squared">Edit</i></button>
+                            <button type="button" id={{incomeCategoriesName}} value={{incomeCategoriesName}} class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editCategory"><i class="icon-trash">Delete</i></button>
                           </div>
                           {%endfor%}
                           <div class="mx-auto">
