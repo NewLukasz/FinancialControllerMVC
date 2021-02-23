@@ -10,23 +10,32 @@
       var isDisabled=$(limit).prop('disabled');
       if(isDisabled){
         $(limit).prop('disabled',false);
-        //alert(10);
       }else{
         $(limit).prop('disabled',true);
       }
     });
+  });
+
+  $(".edit").click(function(){
+    var ABC= $(this).attr('value');
+    $('#editCategory').on('shown.bs.modal', function () {
+    $("#categoryNameHeader").html(ABC);
+})
+    
     
   });
+
+  
   
 </script>
 {%endblock%}
 
 {% block body %}
-<div class="modal fade" id="ChangePeriodsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="editCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Edit category</h5>
+        <h5 class="modal-title">Currenty you are editing: <label id="categoryNameHeader"></label></h5>
         <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
       </div>
       <form action="/showBalance/showBalance" method="post">
@@ -89,7 +98,7 @@
                         <div class="btn-group-vertical mr-2  w-100" role="group" aria-label="First group">
                           {%for incomeCategoriesName in setting.incomeCategoriesNames %}
                           <div class="mx-auto">
-                            {{incomeCategoriesName}}     <button type="button" class="btn btn-link" style="font-size:12px;" data-toggle="modal" data-target="#ChangePeriodsModal">Edit</button>
+                            {{incomeCategoriesName}}     <button type="button" id={{incomeCategoriesName}} value={{incomeCategoriesName}} class="btn btn-link edit" style="font-size:12px;" data-toggle="modal" data-target="#editCategory">Edit</button>
                           </div>
                           {%endfor%}
                           <div class="mx-auto">

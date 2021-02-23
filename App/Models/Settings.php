@@ -23,7 +23,7 @@ class Settings extends \Core\Model{
             $this->incomeCategoriesNames[]=FinancialMovement::getCategoryOrMethodNameById($incomeCategory, static::getUserTableWithIncomesCategory());
         }
 
-        var_dump($this->incomeCategoriesNames);
+        //var_dump($this->incomeCategoriesNames);
         
     }
     
