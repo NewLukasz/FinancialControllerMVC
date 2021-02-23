@@ -2,6 +2,25 @@
 
 {% block title %}Setting{% endblock %}
 
+
+{% block footer %}
+<script>
+  $(document).ready(function(){
+    $(checkBox1).click(function(){
+      var isDisabled=$(limit).prop('disabled');
+      if(isDisabled){
+        $(limit).prop('disabled',false);
+        //alert(10);
+      }else{
+        $(limit).prop('disabled',true);
+      }
+    });
+    
+  });
+  
+</script>
+{%endblock%}
+
 {% block body %}
 <div class="modal fade" id="ChangePeriodsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -19,18 +38,18 @@
                       <div class="input-group-prepend">
                               <span class="input-group-text"><i class="icon-pencil-squared"></i></span>
                       </div>
-                      <input autocomplete="off" value='{{balance.firstLimitDate}}'  name="fisrtLimitDate" id="datePickerFirstLimit" type="text" class="form-control" aria-label="Date">
+                      <input autocomplete="off"   name="fisrtLimitDate" id="datePickerFirstLimit" type="text" class="form-control" aria-label="Date">
                   </div>
                   <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                    <label class="form-check-label" for="exampleCheck1">Switch on limit</label>
+                    <input type="checkbox" class="form-check-input" id="checkBox1">
+                    <label class="form-check-label" for="checkBox1">Switch on limit</label>
                   </div>
                   <label>Type limit for category</label>
                   <div class="input-group mb-2">
                       <div class="input-group-prepend">
                               <span class="input-group-text"><i class="icon-dollar"></i></span>
                       </div>
-                      <input autocomplete="off" value='{{balance.firstLimitDate}}'  name="fisrtLimitDate" id="datePickerFirstLimit" type="text" class="form-control" aria-label="Date">
+                      <input disabled autocomplete="off"  name="limit" id="limit" type="text" class="form-control" aria-label="Date">
                   </div>
                   <div class="row">
                       <div class="col-xs-4 d-flex justify-content-start w-50">
