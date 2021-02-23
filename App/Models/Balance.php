@@ -190,7 +190,7 @@ class Balance extends \Core\Model
         return static::getCategoriesOrPaymentMethodsAssignedToUser(static::getUserTableWithIncomesCategory());
     }
 
-    public function getExpenseCategories(){
+    public static function getExpenseCategories(){
         return static::getCategoriesOrPaymentMethodsAssignedToUser(static::getUserTableWithExpensesCategory());
     }
 

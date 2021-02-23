@@ -17,10 +17,16 @@ class Settings extends \Core\Model{
         };
 
         $this->incomeCategoriesID=Balance::getIncomeCategories();
+        $this->expenseCategoriesID=Balance::getExpenseCategories();
         
         $this->incomeCategoriesNames=[];
         foreach($this->incomeCategoriesID as $incomeCategory){
             $this->incomeCategoriesNames[]=FinancialMovement::getCategoryOrMethodNameById($incomeCategory, static::getUserTableWithIncomesCategory());
+        }
+
+        $this->expenseCategoriesNames=[];
+        foreach($this->expenseCategoriesID as $expenseCategory){
+            $this->expenseCategoriesNames[]=FinancialMovement::getCategoryOrMethodNameById($expenseCategory, static::getUserTableWithExpensesCategory());
         }
 
         //var_dump($this->incomeCategoriesNames);
