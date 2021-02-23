@@ -33,6 +33,11 @@ class Setting extends Authenticated
         ]);
     }
 
+    public function changeCategoryOrPaymentMethodAction()
+    {
+        Settings::changeCategoryOrPaymentMethod();
+    }
+
     /**
      * Add a new item
      *

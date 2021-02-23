@@ -28,10 +28,24 @@ class Settings extends \Core\Model{
         foreach($this->expenseCategoriesID as $expenseCategory){
             $this->expenseCategoriesNames[]=FinancialMovement::getCategoryOrMethodNameById($expenseCategory, static::getUserTableWithExpensesCategory());
         }
-
-        //var_dump($this->incomeCategoriesNames);
-        
     }
-    
 
+    public static function changeCategoryOrPaymentMethod()
+    {
+        echo $_POST['newName']."<br>";
+        echo $_POST['whatToChange']."<br>";
+        $newName=$_POST['newName'];
+
+        $userId=$_SESSION['user_id'];
+        echo $userId."<br>";
+        
+        $name="Nowa nazwa";
+        $id=92;
+        $sql="UPDATE incomes_category_assigned_to_users SET name=:name WHERE id=:id ";
+        $db=static::getDB();
+        $stmt=$db->prepare($sql);
+        $stmt->bindValue(':name', $name, PDO::PARAM_STR);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
 }

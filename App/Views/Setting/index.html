@@ -20,6 +20,7 @@
     var categoryName= $(this).attr('value');
     $("#expenseCategoryNameHeader").html(categoryName);
     $("#incomeCategoryNameHeader").html(categoryName);
+    $("#categoryOrPaymentMethodName").val(categoryName);
   });
 
 
@@ -89,7 +90,7 @@ $('.popover-dismiss').popover({
         <h5 class="modal-title"><label id="incomeCategoryNameHeader"></label></h5>
         <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="/showBalance/showBalance" method="post">
+      <form action="/Setting/changeCategoryOrPaymentMethod" method="post">
           <div class="modal-body">
               <div class="form-group">
                   <label>Type new name of category</label>
@@ -97,6 +98,8 @@ $('.popover-dismiss').popover({
                       <div class="input-group-prepend">
                               <span class="input-group-text"><i class="icon-pencil-squared"></i></span>
                       </div>
+                      <input type="hidden" name="whatToChange" value="incomeCategory">
+                      <input type="hidden" name="categoryOrPaymentMethodName" id="categoryOrPaymentMethodName">
                       <input autocomplete="off" name="newName" type="text" class="form-control" aria-label="Date">
                   </div>
                   </div>
