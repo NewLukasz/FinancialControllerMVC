@@ -34,17 +34,23 @@ class Settings extends \Core\Model{
     {
         echo $_POST['newName']."<br>";
         echo $_POST['whatToChange']."<br>";
+        echo $_POST['categoryOrPaymentMethodName'];
+        
+        $userId=$_SESSION['user_id'];
         $newName=$_POST['newName'];
 
-        $userId=$_SESSION['user_id'];
-        echo $userId."<br>";
-        
-        $name="Nowa nazwa";
-        $id=92;
-        $sql="UPDATE incomes_category_assigned_to_users SET name=:name WHERE id=:id ";
+        $nameToChange=$_POST['categoryOrPaymentMethodName'];
+        echo $nameToChange;
+        if($_POST['whatToChange']=="incomeCategory"){
+            $tableWithCategories=static::getUserTableWithIncomesCategory();
+            $id=FinancialMovement::getCategoryOrMethodIdByName($nameToChange, $tableWithCategories);
+            $sql="UPDATE ".$tableWithCategories." SET name=:name WHERE id=:id ";
+        }elseif($_POST['whatToChange']=="expenseCategory"){
+            
+        }
         $db=static::getDB();
         $stmt=$db->prepare($sql);
-        $stmt->bindValue(':name', $name, PDO::PARAM_STR);
+        $stmt->bindValue(':name', $newName, PDO::PARAM_STR);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
     }

@@ -20,7 +20,8 @@
     var categoryName= $(this).attr('value');
     $("#expenseCategoryNameHeader").html(categoryName);
     $("#incomeCategoryNameHeader").html(categoryName);
-    $("#categoryOrPaymentMethodName").val(categoryName);
+    $("#incomeCategoryName").val(categoryName);
+    $("#expenseCategoryName").val(categoryName);
   });
 
 
@@ -52,6 +53,8 @@ $('.popover-dismiss').popover({
                       <div class="input-group-prepend">
                               <span class="input-group-text"><i class="icon-pencil-squared"></i></span>
                       </div>
+                      <input type="hidden" name="whatToChange" value="expenseCategory">
+                      <input type="hidden" name="categoryOrPaymentMethodName" id="expenseCategoryName">
                       <input autocomplete="off" name="newName" type="text" class="form-control" aria-label="Date" data-content="If you want only add a limit, keep this place empty." data-placement="auto" data-trigger="hover" data-popover="popover">
                   </div>
                   <div class="form-check">
@@ -99,7 +102,7 @@ $('.popover-dismiss').popover({
                               <span class="input-group-text"><i class="icon-pencil-squared"></i></span>
                       </div>
                       <input type="hidden" name="whatToChange" value="incomeCategory">
-                      <input type="hidden" name="categoryOrPaymentMethodName" id="categoryOrPaymentMethodName">
+                      <input type="hidden" name="categoryOrPaymentMethodName" id="incomeCategoryName">
                       <input autocomplete="off" name="newName" type="text" class="form-control" aria-label="Date">
                   </div>
                   </div>

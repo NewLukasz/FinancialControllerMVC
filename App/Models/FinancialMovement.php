@@ -67,7 +67,7 @@ class FinancialMovement extends \Core\Model
         }
     }
 
-    protected static function getCategoryOrMethodIdByName($name,$tableWithData){
+    public static function getCategoryOrMethodIdByName($name,$tableWithData){
         $userId=$_SESSION['user_id'];
         $sql="SELECT id FROM ".$tableWithData." WHERE name= :name AND user_id=".$userId;
         $db=static::getDB();
@@ -75,7 +75,11 @@ class FinancialMovement extends \Core\Model
         $stmt->bindValue(':name', $name, PDO::PARAM_STR);
         $stmt->execute();
         $result=$stmt->fetch(PDO::FETCH_ASSOC);
-        return $result['id'];
+        var_dump($result);
+        echo $userId;
+        if(isset($result['id'])){
+            return $result['id'];
+        }
     }
 
     public static function getCategoryOrMethodNameById($id, $tableWithData){
