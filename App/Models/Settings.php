@@ -74,4 +74,28 @@ class Settings extends \Core\Model{
         $stmt->bindValue(':expense_limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
     }
+
+    public static function addNewCategoryOrPaymentMethod(){
+        echo $_POST['whatToAdd']."<br>";
+        $name=$_POST['newNameToAdd'];
+        echo $name;
+        $userId=$_SESSION['user_id'];
+        $tableWithCategories=static::getCorrectTableToInsertData($_POST['whatToAdd']);
+        $sql="INSERT INTO ".$tableWithCategories." (user_id, name) VALUES(".$userId.",:name)";
+        $db=static::getDB();
+        $stmt=$db->prepare($sql);
+        $stmt->bindValue(':name', $name, PDO::PARAM_STR);
+        echo $name;
+        $stmt->execute();
+    }
+
+    protected static function getCorrectTableToInsertData($stringWhichDefineTable){
+        if($stringWhichDefineTable=='incomeCategory'){
+            return static::getUserTableWithIncomesCategory();
+        }else if($stringWhichDefineTable=='paymentMethod'){
+            return static::getUserTableWithPaymentMethods();
+        }else if($stringWhichDefineTable=='expenseCategory'){
+            return static::getUserTableWithExpensesCategory();
+        }
+    }
 }

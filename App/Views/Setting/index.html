@@ -20,7 +20,6 @@
     var categoryName= $(this).attr('value');
     var destination=$(this).attr('data-value');
     if(destination=='income'){
-      //alert(destination);
       $("#incomeCategoryAndPaymentMethodNameHeader").html(categoryName);
       $("#categoryNameToChange").val(categoryName);
       $("#whatToChange").val('incomeCategory');
@@ -28,20 +27,32 @@
       $("#incomeCategoryAndPaymentMethodNameHeader").html(categoryName);
       $("#categoryNameToChange").val(categoryName);
       $("#whatToChange").val('paymentMethod');
-     // alert(destination);
     }
     $("#expenseCategoryNameHeader").html(categoryName);
     $("#expenseCategoryName").val(categoryName);
   });
 
+  $(".add").click(function() {
+    var destination=$(this).attr('value');
+    if(destination=='income'){
+      $("#addingNewCategoryOrPaymentMethodHeader").html("Adding an new income category");
+      $("#whatToAdd").val('incomeCategory');
+    }else if(destination=='expense'){
+      $("#addingNewCategoryOrPaymentMethodHeader").html("Adding an new expense category");
+      $("#whatToAdd").val('expenseCategory');
+    }else if(destination=='method'){
+      $("#addingNewCategoryOrPaymentMethodHeader").html("Adding an new payment method");
+      $("#whatToAdd").val('paymentMethod');
+    }
+  });
 
-$(function () {
-  $('[data-popover="popover"]').popover()
-})
+  $(function () {
+    $('[data-popover="popover"]').popover()
+  })
 
-$('.popover-dismiss').popover({
-  trigger: 'focus'
-})
+  $('.popover-dismiss').popover({
+    trigger: 'focus'
+  })
   
 </script>
 {%endblock%}
@@ -131,6 +142,41 @@ $('.popover-dismiss').popover({
 </div>
 </div>
 
+<!--Adding new category or payment method modal-->
+<div class="modal fade" id="addNewCategoryOrPaymentMethodModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><label id="addingNewCategoryOrPaymentMethodHeader"></label></h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/Setting/addNewCategoryOrPaymentMethod" method="post">
+          <div class="modal-body">
+              <div class="form-group">
+                  Type name below:
+                  <div class="input-group mb-2 py-3">
+                      <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="icon-pencil-squared"></i></span>
+                      </div>
+                      <input type="hidden" name="whatToAdd" id="whatToAdd">
+                      <input autocomplete="off" name="newNameToAdd" type="text" class="form-control" aria-label="Date">
+                  </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-xs-4 d-flex justify-content-start w-50">
+                          <button type="submit" class="btn btn-success m-1">Add new one</button>
+                      </div>
+                      <div class="col-xs-4 d-flex justify-content-end w-50">
+                          <button type="button" class="btn btn-secondary m-1" data-dismiss="modal">Close</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
 
 
 <div class="container text-center mt-5">
@@ -143,7 +189,6 @@ $('.popover-dismiss').popover({
           </button>
         </h2>
       </div>
-
       <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#settings">
         <div class="card-body">
           <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
@@ -156,7 +201,7 @@ $('.popover-dismiss').popover({
                 </div>
                 {%endfor%}
                 <div class="mx-auto">
-                  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#Tutaj modal do dodawania kategorii">Add new income category</button>
+                  <button type="button" class="btn btn-success add" data-toggle="modal" value="income" data-target="#addNewCategoryOrPaymentMethodModal">Add new income category</button>
                 </div>
               </div>
           </div>
@@ -183,7 +228,7 @@ $('.popover-dismiss').popover({
               </div>
               {%endfor%}
               <div class="mx-auto">
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#editExpenseCategory">Add new income category</button>
+                <button type="button" class="btn btn-success add" data-toggle="modal" value="expense" data-target="#addNewCategoryOrPaymentMethodModal">Add new expense category</button>
               </div>
             </div>
         </div>
@@ -205,6 +250,7 @@ $('.popover-dismiss').popover({
               <button type="button" value={{paymentMethodName}}  class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#modal do usuwania"><i class="icon-trash">Delete</i></button>
             </div>
             {%endfor%}
+            <button type="button" class="btn btn-success add" data-toggle="modal" value="method" data-target="#addNewCategoryOrPaymentMethodModal">Add new payment method</button>
           </div>
         </div>
       </div>

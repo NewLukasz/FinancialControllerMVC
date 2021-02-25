@@ -38,6 +38,11 @@ class Setting extends Authenticated
         Settings::changeCategoryOrPaymentMethod();
     }
 
+    public function addNewCategoryOrPaymentMethodAction()
+    {
+        Settings::addNewCategoryOrPaymentMethod();
+    }
+
     /**
      * Add a new item
      *
