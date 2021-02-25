@@ -46,6 +46,24 @@
     }
   });
 
+  $(".deleteButton").click(function(){
+    var destination=$(this).attr('data-value');
+    var nameOfCategoryToDelete=$(this).attr('value');
+    if(destination=='income'){
+      $('#deleteModalHeader').html("Deleting income category");
+      $('#whatToDelete').val('incomeCategory');
+      $('#categoryOrMethodNameToDelete').val(nameOfCategoryToDelete);
+    }else if(destination=='expense'){
+      $('#deleteModalHeader').html("Deleting expense category");
+      $('#whatToDelete').val('expenseCategory');
+      $('#categoryOrMethodNameToDelete').val(nameOfCategoryToDelete);
+    }else if(destination=='method'){
+      $('#deleteModalHeader').html("Deleting payment method");
+      $('#whatToDelete').val('paymentMethod');
+      $('#categoryOrMethodNameToDelete').val(nameOfCategoryToDelete);
+    }
+  });
+
   $(function () {
     $('[data-popover="popover"]').popover()
   })
@@ -178,6 +196,37 @@
 </div>
 </div>
 
+<!--Delete modal-->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><label id="deleteModalHeader"></label></h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/Setting/deleteCategoryOrPaymentMethod" method="post">
+          <div class="modal-body">
+              <div class="form-group">
+                  <div class="input-group mb-2 py-3">
+                      <input type="hidden" name="whatToDelete" id="whatToDelete">
+                      <input type="hidden" name="categoryOrMethodNameToDelete" id="categoryOrMethodNameToDelete">
+                  </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-xs-4 d-flex justify-content-start w-50">
+                          <button type="submit" class="btn btn-danger m-1">Delete permanently</button>
+                      </div>
+                      <div class="col-xs-4 d-flex justify-content-end w-50">
+                          <button type="button" class="btn btn-secondary m-1" data-dismiss="modal">Close</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
 
 <div class="container text-center mt-5">
   <div class="accordion" id="settings">
@@ -197,7 +246,7 @@
                 <div class="mx-auto">
                   {{incomeCategoriesName}}     
                   <button type="button" value={{incomeCategoriesName}} data-value="income" class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editIncomeCategoryOrPaymentMethod"><i class="icon-pencil-squared">Edit</i></button>
-                  <button type="button" value={{incomeCategoriesName}} class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#Tutaj modal do usuwania kategorii"><i class="icon-trash">Delete</i></button>
+                  <button type="button" value={{incomeCategoriesName}} data-value="income" class="edit btn-categories deleteButton" style="size:15px;" data-toggle="modal" data-target="#deleteModal"><i class="icon-trash">Delete</i></button>
                 </div>
                 {%endfor%}
                 <div class="mx-auto">
@@ -224,7 +273,7 @@
               <div class="mx-auto">
                 {{expenseCategoriesName}}     
                 <button type="button" value={{expenseCategoriesName}} class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editExpenseCategory"><i class="icon-pencil-squared">Edit</i></button>
-                <button type="button" value={{expenseCategoriesName}} class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editExpenseCategory"><i class="icon-trash">Delete</i></button>
+                <button type="button" value={{expenseCategoriesName}} data-value="expense" class="edit btn-categories deleteButton" style="size:15px;" data-toggle="modal" data-target="#deleteModal"><i class="icon-trash">Delete</i></button>
               </div>
               {%endfor%}
               <div class="mx-auto">
@@ -247,7 +296,7 @@
             <div class="mx-auto">
               {{paymentMethodName}}     
               <button type="button" value={{paymentMethodName}} data-value="method"  class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editIncomeCategoryOrPaymentMethod"><i class="icon-pencil-squared">Edit</i></button>
-              <button type="button" value={{paymentMethodName}}  class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#modal do usuwania"><i class="icon-trash">Delete</i></button>
+              <button type="button" value={{paymentMethodName}}  data-value="method" class="edit btn-categories deleteButton" style="size:15px;" data-toggle="modal" data-target="#deleteModal"><i class="icon-trash">Delete</i></button>
             </div>
             {%endfor%}
             <button type="button" class="btn btn-success add" data-toggle="modal" value="method" data-target="#addNewCategoryOrPaymentMethodModal">Add new payment method</button>

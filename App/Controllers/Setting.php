@@ -25,22 +25,23 @@ class Setting extends Authenticated
      *
      * @return void
      */
-    public function indexAction()
-    {
+    public function indexAction(){
         $setting=new Settings($_POST);
         View::renderTemplate('Setting/index.html',[
             'setting'=>$setting
         ]);
     }
 
-    public function changeCategoryOrPaymentMethodAction()
-    {
+    public function changeCategoryOrPaymentMethodAction(){
         Settings::changeCategoryOrPaymentMethod();
     }
 
-    public function addNewCategoryOrPaymentMethodAction()
-    {
+    public function addNewCategoryOrPaymentMethodAction(){
         Settings::addNewCategoryOrPaymentMethod();
+    }
+
+    public function deleteCategoryOrPaymentMethodAction(){
+        Settings::deleteCategoryOrPaymentMethod();
     }
 
     /**

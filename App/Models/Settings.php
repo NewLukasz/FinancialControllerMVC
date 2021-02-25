@@ -42,7 +42,7 @@ class Settings extends \Core\Model{
         $newName=$_POST['newName'];
         $nameToChange=$_POST['categoryOrPaymentMethodName'];
         $tableWithCategories=static::getCorrectTableToInsertData($_POST['whatToChange']);
-        
+
         if(isset($_POST['limit'])){
             static::addLimit(FinancialMovement::getCategoryOrMethodIdByName($nameToChange, $tableWithCategories),$_POST['limit'],$tableWithCategories);
         }
@@ -86,5 +86,9 @@ class Settings extends \Core\Model{
         }else if($stringWhichDefineTable=='expenseCategory'){
             return static::getUserTableWithExpensesCategory();
         }
+    }
+
+    public static function deleteCategoryOrPaymentMethod(){
+        print_r($_POST);
     }
 }
