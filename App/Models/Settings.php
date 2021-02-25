@@ -74,7 +74,6 @@ class Settings extends \Core\Model{
         $db=static::getDB();
         $stmt=$db->prepare($sql);
         $stmt->bindValue(':name', $name, PDO::PARAM_STR);
-        echo $name;
         $stmt->execute();
     }
 
@@ -90,5 +89,14 @@ class Settings extends \Core\Model{
 
     public static function deleteCategoryOrPaymentMethod(){
         print_r($_POST);
+        $tableWithCategories=static::getCorrectTableToInsertData($_POST['whatToDelete']);
+        echo "<br>";
+        echo $id=FinancialMovement::getCategoryOrMethodIdByName($_POST['categoryOrMethodNameToDelete'], $tableWithCategories);
+
+        $sql="DELETE FROM ".$tableWithCategories." WHERE id='".$id."'";
+        
+        $db=static::getDB();
+        $stmt=$db->prepare($sql);
+        $stmt->execute();
     }
 }
