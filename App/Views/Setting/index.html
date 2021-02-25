@@ -20,7 +20,6 @@
     var categoryName= $(this).attr('value');
     var destination=$(this).attr('data-value');
     if(destination=='income'){
-      alert(categoryName);
       $("#incomeCategoryAndPaymentMethodNameHeader").html(categoryName);
       $("#categoryNameToChange").val(categoryName);
       $("#whatToChange").val('incomeCategory');
