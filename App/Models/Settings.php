@@ -79,18 +79,19 @@ class Settings extends \Core\Model{
 
     protected static function getCorrectTableToInsertData($stringWhichDefineTable){
         if($stringWhichDefineTable=='incomeCategory'){
+            static::setChangeIncomeSettingFlagON();
             return static::getUserTableWithIncomesCategory();
         }else if($stringWhichDefineTable=='paymentMethod'){
+            static::setChangePaymentMethodsSettingFlagON();
             return static::getUserTableWithPaymentMethods();
         }else if($stringWhichDefineTable=='expenseCategory'){
+            static::setChangeExpenseSettingFlagON();
             return static::getUserTableWithExpensesCategory();
         }
     }
 
     public static function deleteCategoryOrPaymentMethod(){
-        print_r($_POST);
         $tableWithCategories=static::getCorrectTableToInsertData($_POST['whatToDelete']);
-        echo "<br>";
         echo $id=FinancialMovement::getCategoryOrMethodIdByName($_POST['categoryOrMethodNameToDelete'], $tableWithCategories);
 
         $sql="DELETE FROM ".$tableWithCategories." WHERE id='".$id."'";
@@ -99,4 +100,17 @@ class Settings extends \Core\Model{
         $stmt=$db->prepare($sql);
         $stmt->execute();
     }
+
+    public static function setChangeIncomeSettingFlagON(){
+        $_SESSION['incomeChangeSettingFlag']=true;
+    }
+
+    public static function setChangeExpenseSettingFlagON(){
+        $_SESSION['expenseChangeSettingFlag']=true;
+    }
+
+    public static function setChangePaymentMethodsSettingFlagON(){
+        $_SESSION['methodsChangeSettingFlag']=true;
+    }
+
 }

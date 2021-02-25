@@ -216,7 +216,8 @@ class FinancialMovement extends \Core\Model
     }
 
     public static function getIncomeCategories(){
-        if(!isset($_SESSION['incomeCategories'])){
+        if(!isset($_SESSION['incomeCategories']) or isset($_SESSION['incomeChangeSettingFlag'])){
+            unset($_SESSION['incomeChangeSettingFlag']);
             return $_SESSION['incomeCategories']=static::getCategoriesAndMethodFromDB(static::getUserTableWithIncomesCategory());
         }else{
             return $_SESSION['incomeCategories'];
@@ -224,7 +225,8 @@ class FinancialMovement extends \Core\Model
     }
 
     public static function getExpenseCategories(){
-        if(!isset($_SESSION['expenseCategories'])){
+        if(!isset($_SESSION['expenseCategories']) or isset($_SESSION['expenseChangeSettingFlag'])){
+            unset($_SESSION['expenseChangeSettingFlag']);
             return $_SESSION['expenseCategories']=static::getCategoriesAndMethodFromDB(static::getUserTableWithExpensesCategory());
         }else{
             return $_SESSION['expenseCategories'];
@@ -232,7 +234,8 @@ class FinancialMovement extends \Core\Model
     }
 
     public static function getPaymentMethods(){
-        if(!isset($_SESSION['paymentMethods'])){
+        if(!isset($_SESSION['paymentMethods'])  or isset($_SESSION['methodsChangeSettingFlag'])){
+            unset($_SESSION['methodsChangeSettingFlag']);
             return $_SESSION['paymentMethods']=static::getCategoriesAndMethodFromDB(static::getUserTableWithPaymentMethods());
         }else{
             return $_SESSION['paymentMethods'];
