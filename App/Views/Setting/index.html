@@ -18,9 +18,19 @@
 
   $(".edit").click(function(){
     var categoryName= $(this).attr('value');
+    var destination=$(this).attr('data-value');
+    if(destination=='income'){
+      //alert(destination);
+      $("#incomeCategoryAndPaymentMethodNameHeader").html(categoryName);
+      $("#categoryNameToChange").val(categoryName);
+      $("#whatToChange").val('incomeCategory');
+    }else if(destination=='method'){
+      $("#incomeCategoryAndPaymentMethodNameHeader").html(categoryName);
+      $("#categoryNameToChange").val(categoryName);
+      $("#whatToChange").val('paymentMethod');
+     // alert(destination);
+    }
     $("#expenseCategoryNameHeader").html(categoryName);
-    $("#incomeCategoryNameHeader").html(categoryName);
-    $("#incomeCategoryName").val(categoryName);
     $("#expenseCategoryName").val(categoryName);
   });
 
@@ -37,7 +47,44 @@ $('.popover-dismiss').popover({
 {%endblock%}
 
 {% block body %}
+<!--Income modal-->
+<div class="modal fade" id="editIncomeCategory" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><label id="incomeCategoryAndPaymentMethodNameHeader"></label></h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/Setting/changeCategoryOrPaymentMethod" method="post">
+          <div class="modal-body">
+              <div class="form-group">
+                  <label>Type new name below</label>
+                  <div class="input-group mb-2 py-3">
+                      <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="icon-pencil-squared"></i></span>
+                      </div>
+                      <input type="hidden" name="whatToChange" id="whatToChange">
+                      <input type="hidden" name="categoryOrPaymentMethodName" id="categoryNameToChange">
+                      <input autocomplete="off" name="newName" type="text" class="form-control" aria-label="Date">
+                  </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-xs-4 d-flex justify-content-start w-50">
+                          <button type="submit" class="btn btn-primary m-1">Change</button>
+                      </div>
+                      <div class="col-xs-4 d-flex justify-content-end w-50">
+                          <button type="button" class="btn btn-secondary m-1" data-dismiss="modal">Close</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
 <!--Expense modal-->
+<!--
 <div class="modal fade" id="editExpenseCategory" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -45,7 +92,7 @@ $('.popover-dismiss').popover({
         <h5 class="modal-title"><label id="expenseCategoryNameHeader"></label></h5>
         <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="/showBalance/showBalance" method="post">
+      <form action="/Setting/changeCategoryOrPaymentMethod" method="post">
           <div class="modal-body">
               <div class="form-group">
                   <label>Type new name of category</label>
@@ -84,43 +131,8 @@ $('.popover-dismiss').popover({
   </div>
 </div>
 </div>
+-->
 
-<!--Income modal-->
-<div class="modal fade" id="editIncomeCategory" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"><label id="incomeCategoryNameHeader"></label></h5>
-        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form action="/Setting/changeCategoryOrPaymentMethod" method="post">
-          <div class="modal-body">
-              <div class="form-group">
-                  <label>Type new name of category</label>
-                  <div class="input-group mb-2 py-3">
-                      <div class="input-group-prepend">
-                              <span class="input-group-text"><i class="icon-pencil-squared"></i></span>
-                      </div>
-                      <input type="hidden" name="whatToChange" value="incomeCategory">
-                      <input type="hidden" name="categoryOrPaymentMethodName" id="incomeCategoryName">
-                      <input autocomplete="off" name="newName" type="text" class="form-control" aria-label="Date">
-                  </div>
-                  </div>
-                  <div class="row">
-                      <div class="col-xs-4 d-flex justify-content-start w-50">
-                          <button type="submit" class="btn btn-primary m-1">Change</button>
-                      </div>
-                      <div class="col-xs-4 d-flex justify-content-end w-50">
-                          <button type="button" class="btn btn-secondary m-1" data-dismiss="modal">Close</button>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </form>
-    </div>
-  </div>
-</div>
-</div>
 
 <div class="container text-center mt-5">
   <div class="accordion" id="settings">
@@ -140,7 +152,7 @@ $('.popover-dismiss').popover({
                 {%for incomeCategoriesName in setting.incomeCategoriesNames %}
                 <div class="mx-auto">
                   {{incomeCategoriesName}}     
-                  <button type="button" value={{incomeCategoriesName}} class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editIncomeCategory"><i class="icon-pencil-squared">Edit</i></button>
+                  <button type="button" value={{incomeCategoriesName}} data-value="income" class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editIncomeCategory"><i class="icon-pencil-squared">Edit</i></button>
                   <button type="button" value={{incomeCategoriesName}} class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editIncomeCategory"><i class="icon-trash">Delete</i></button>
                 </div>
                 {%endfor%}
@@ -182,19 +194,18 @@ $('.popover-dismiss').popover({
       <div class="card">
         <div class="card-header" id="headingThree">
           <h2 class="mb-0">
-            <button class="btn btn-primary collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" data-content="In this place you can add new payments methods, edit existing or add new one." data-placement="auto" data-trigger="hover" data-popover="popover">
-              PaymentMethods
-            </button>
+            <button class="btn btn-primary collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" data-content="In this place you can add new payments methods, edit existing or add new one." data-placement="auto" data-trigger="hover" data-popover="popover">Payment Methods</button>
           </h2>
         </div>
         <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#settings">
           <div class="card-body">
-              <ul>
-                  <li>Pierwsza kategoria</li>
-                  <li>Druga kategoria</li>
-                  <li>Trzecia kategoria</li>
-                  <li>Czwarta kategoria</li>
-              </ul>
+            {%for paymentMethodName in setting.paymentMethodsNames %}
+            <div class="mx-auto">
+              {{paymentMethodName}}     
+              <button type="button" value={{paymentMethodName}} data-value="method"  class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editIncomeCategory"><i class="icon-pencil-squared">Edit</i></button>
+              <button type="button" value={{paymentMethodName}}  class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editIncomeCategory"><i class="icon-trash">Delete</i></button>
+            </div>
+            {%endfor%}
           </div>
         </div>
       </div>

@@ -75,8 +75,6 @@ class FinancialMovement extends \Core\Model
         $stmt->bindValue(':name', $name, PDO::PARAM_STR);
         $stmt->execute();
         $result=$stmt->fetch(PDO::FETCH_ASSOC);
-        var_dump($result);
-        echo $userId;
         if(isset($result['id'])){
             return $result['id'];
         }

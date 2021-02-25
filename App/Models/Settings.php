@@ -18,6 +18,7 @@ class Settings extends \Core\Model{
 
         $this->incomeCategoriesID=Balance::getIncomeCategories();
         $this->expenseCategoriesID=Balance::getExpenseCategories();
+        $this->paymentMethodsCategoriesID=Balance::getPaymentMethods();
         
         $this->incomeCategoriesNames=[];
         foreach($this->incomeCategoriesID as $incomeCategory){
@@ -27,6 +28,11 @@ class Settings extends \Core\Model{
         $this->expenseCategoriesNames=[];
         foreach($this->expenseCategoriesID as $expenseCategory){
             $this->expenseCategoriesNames[]=FinancialMovement::getCategoryOrMethodNameById($expenseCategory, static::getUserTableWithExpensesCategory());
+        }
+
+        $this->paymentMethodsNames=[];
+        foreach($this->paymentMethodsCategoriesID as $paymentMethod){
+            $this->paymentMethodsNames[]=FinancialMovement::getCategoryOrMethodNameById($paymentMethod, static::getUserTableWithPaymentMethods());
         }
     }
 
@@ -46,7 +52,14 @@ class Settings extends \Core\Model{
             $id=FinancialMovement::getCategoryOrMethodIdByName($nameToChange, $tableWithCategories);
             $sql="UPDATE ".$tableWithCategories." SET name=:name WHERE id=:id ";
         }elseif($_POST['whatToChange']=="expenseCategory"){
-            
+            $tableWithCategories=static::getUserTableWithExpensesCategory();
+            $id=FinancialMovement::getCategoryOrMethodIdByName($nameToChange, $tableWithCategories);
+            $sql="UPDATE ".$tableWithCategories." SET name=:name WHERE id=:id ";
+        }elseif($_POST['whatToChange']=='paymentMethod'){
+            echo "hop hop panie prezesie";
+            $tableWithCategories=static::getUserTableWithPaymentMethods();
+            $id=FinancialMovement::getCategoryOrMethodIdByName($nameToChange, $tableWithCategories);
+            $sql="UPDATE ".$tableWithCategories." SET name=:name WHERE id=:id ";
         }
         $db=static::getDB();
         $stmt=$db->prepare($sql);

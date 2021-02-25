@@ -194,6 +194,10 @@ class Balance extends \Core\Model
         return static::getCategoriesOrPaymentMethodsAssignedToUser(static::getUserTableWithExpensesCategory());
     }
 
+    public static function getPaymentMethods(){
+        return static::getCategoriesOrPaymentMethodsAssignedToUser(static::getUserTableWithPaymentMethods());
+    }
+
     public function countAmountDependsOnCategoryOfIncomes(){
         return $this->categoriesAndAmountOfIncomes=$this->countAmountDependsOnCategory(static::getIncomeCategories(),static::getUserTableWithIncomesCategory(),1);
     }
