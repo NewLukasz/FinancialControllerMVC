@@ -175,7 +175,8 @@ class FinancialMovement extends \Core\Model
         static::fulfilUserTablesWithDefaultCategoriesAndPaymentMethods(
             $userId,
             static::getDefaultExpensesTable(),
-            static::getUserTableWithExpensesCategory()
+            static::getUserTableWithExpensesCategory(),
+            'expense'
         );
 
         static::fulfilUserTablesWithDefaultCategoriesAndPaymentMethods(
@@ -197,13 +198,20 @@ class FinancialMovement extends \Core\Model
         return $result['id'];
     }
 
-    public static function fulfilUserTablesWithDefaultCategoriesAndPaymentMethods($userId, $tableDefault, $tableUserCategory){
+    public static function fulfilUserTablesWithDefaultCategoriesAndPaymentMethods($userId, $tableDefault, $tableUserCategory, $indicator=0){
         $db=static::getDB();
         $defaultCategoriesQuery=$db->query(("SELECT name FROM ").$tableDefault);
         $defaultCategoriesResult=$defaultCategoriesQuery->fetchAll();
-        foreach($defaultCategoriesResult as $nameArray){
-            $name=$nameArray['name'];
-            $db->query("INSERT INTO ".$tableUserCategory." VALUES(NULL,'$userId','$name')");
+        if($indicator=='expense'){
+            foreach($defaultCategoriesResult as $nameArray){
+                $name=$nameArray['name'];
+                $db->query("INSERT INTO ".$tableUserCategory." VALUES(NULL,'$userId','$name',NULL)");
+            }
+        }else{
+            foreach($defaultCategoriesResult as $nameArray){
+                $name=$nameArray['name'];
+                $db->query("INSERT INTO ".$tableUserCategory." VALUES(NULL,'$userId','$name')");
+            }
         }
     }
 
