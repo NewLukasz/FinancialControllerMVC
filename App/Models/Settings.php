@@ -38,24 +38,15 @@ class Settings extends \Core\Model{
 
     public static function changeCategoryOrPaymentMethod()
     {
-        echo $_POST['newName']."<br>";
-        echo $_POST['whatToChange']."<br>";
-        echo $_POST['categoryOrPaymentMethodName'];
-        
         $userId=$_SESSION['user_id'];
         $newName=$_POST['newName'];
-        
         $nameToChange=$_POST['categoryOrPaymentMethodName'];
-        if($_POST['whatToChange']=="incomeCategory"){
-            $tableWithCategories=static::getUserTableWithIncomesCategory();
-        }elseif($_POST['whatToChange']=='paymentMethod'){
-            $tableWithCategories=static::getUserTableWithPaymentMethods();
-        }elseif($_POST['whatToChange']=="expenseCategory"){
-            $tableWithCategories=static::getUserTableWithExpensesCategory();
-            if(isset($_POST['limit'])){
-                static::addLimit(FinancialMovement::getCategoryOrMethodIdByName($nameToChange, $tableWithCategories),$_POST['limit'],$tableWithCategories);
-            }
+        $tableWithCategories=static::getCorrectTableToInsertData($_POST['whatToChange']);
+        
+        if(isset($_POST['limit'])){
+            static::addLimit(FinancialMovement::getCategoryOrMethodIdByName($nameToChange, $tableWithCategories),$_POST['limit'],$tableWithCategories);
         }
+
         if(!empty($_POST['newName'])){
             $id=FinancialMovement::getCategoryOrMethodIdByName($nameToChange, $tableWithCategories);
             $sql="UPDATE ".$tableWithCategories." SET name=:name WHERE id=:id ";
@@ -76,9 +67,7 @@ class Settings extends \Core\Model{
     }
 
     public static function addNewCategoryOrPaymentMethod(){
-        echo $_POST['whatToAdd']."<br>";
         $name=$_POST['newNameToAdd'];
-        echo $name;
         $userId=$_SESSION['user_id'];
         $tableWithCategories=static::getCorrectTableToInsertData($_POST['whatToAdd']);
         $sql="INSERT INTO ".$tableWithCategories." (user_id, name) VALUES(".$userId.",:name)";
