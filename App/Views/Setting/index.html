@@ -47,8 +47,8 @@ $('.popover-dismiss').popover({
 {%endblock%}
 
 {% block body %}
-<!--Income modal-->
-<div class="modal fade" id="editIncomeCategory" tabindex="-1" aria-hidden="true">
+<!--IncomeCategory/PaymentMethod modal-->
+<div class="modal fade" id="editIncomeCategoryOrPaymentMethod" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -152,12 +152,12 @@ $('.popover-dismiss').popover({
                 {%for incomeCategoriesName in setting.incomeCategoriesNames %}
                 <div class="mx-auto">
                   {{incomeCategoriesName}}     
-                  <button type="button" value={{incomeCategoriesName}} data-value="income" class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editIncomeCategory"><i class="icon-pencil-squared">Edit</i></button>
-                  <button type="button" value={{incomeCategoriesName}} class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editIncomeCategory"><i class="icon-trash">Delete</i></button>
+                  <button type="button" value={{incomeCategoriesName}} data-value="income" class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editIncomeCategoryOrPaymentMethod"><i class="icon-pencil-squared">Edit</i></button>
+                  <button type="button" value={{incomeCategoriesName}} class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#Tutaj modal do usuwania kategorii"><i class="icon-trash">Delete</i></button>
                 </div>
                 {%endfor%}
                 <div class="mx-auto">
-                  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#editIncomeCategory">Add new income category</button>
+                  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#Tutaj modal do dodawania kategorii">Add new income category</button>
                 </div>
               </div>
           </div>
@@ -167,7 +167,7 @@ $('.popover-dismiss').popover({
     <div class="card">
       <div class="card-header" id="headingTwo">
         <h2 class="mb-0">
-          <button class="btn btn-primary collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" data-content="In this place you can add new expenses category, edit existing or add new one." data-placement="auto" data-trigger="hover" data-popover="popover">
+          <button class="btn btn-primary collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" data-content="In this place you can add new expenses category, edit existing, add new one or add limit for each category." data-placement="auto" data-trigger="hover" data-popover="popover">
             Expenses Categories
           </button>
         </h2>
@@ -202,8 +202,8 @@ $('.popover-dismiss').popover({
             {%for paymentMethodName in setting.paymentMethodsNames %}
             <div class="mx-auto">
               {{paymentMethodName}}     
-              <button type="button" value={{paymentMethodName}} data-value="method"  class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editIncomeCategory"><i class="icon-pencil-squared">Edit</i></button>
-              <button type="button" value={{paymentMethodName}}  class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editIncomeCategory"><i class="icon-trash">Delete</i></button>
+              <button type="button" value={{paymentMethodName}} data-value="method"  class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editIncomeCategoryOrPaymentMethod"><i class="icon-pencil-squared">Edit</i></button>
+              <button type="button" value={{paymentMethodName}}  class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#modal do usuwania"><i class="icon-trash">Delete</i></button>
             </div>
             {%endfor%}
           </div>

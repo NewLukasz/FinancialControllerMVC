@@ -51,13 +51,12 @@ class Settings extends \Core\Model{
             $tableWithCategories=static::getUserTableWithIncomesCategory();
             $id=FinancialMovement::getCategoryOrMethodIdByName($nameToChange, $tableWithCategories);
             $sql="UPDATE ".$tableWithCategories." SET name=:name WHERE id=:id ";
-        }elseif($_POST['whatToChange']=="expenseCategory"){
-            $tableWithCategories=static::getUserTableWithExpensesCategory();
+        }elseif($_POST['whatToChange']=='paymentMethod'){
+            $tableWithCategories=static::getUserTableWithPaymentMethods();
             $id=FinancialMovement::getCategoryOrMethodIdByName($nameToChange, $tableWithCategories);
             $sql="UPDATE ".$tableWithCategories." SET name=:name WHERE id=:id ";
-        }elseif($_POST['whatToChange']=='paymentMethod'){
-            echo "hop hop panie prezesie";
-            $tableWithCategories=static::getUserTableWithPaymentMethods();
+        }elseif($_POST['whatToChange']=="expenseCategory"){
+            $tableWithCategories=static::getUserTableWithExpensesCategory();
             $id=FinancialMovement::getCategoryOrMethodIdByName($nameToChange, $tableWithCategories);
             $sql="UPDATE ".$tableWithCategories." SET name=:name WHERE id=:id ";
         }
