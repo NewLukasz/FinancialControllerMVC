@@ -20,6 +20,7 @@
     var categoryName= $(this).attr('value');
     var destination=$(this).attr('data-value');
     if(destination=='income'){
+      alert(categoryName);
       $("#incomeCategoryAndPaymentMethodNameHeader").html(categoryName);
       $("#categoryNameToChange").val(categoryName);
       $("#whatToChange").val('incomeCategory');
@@ -245,8 +246,8 @@
                 {%for incomeCategoriesName in setting.incomeCategoriesNames %}
                 <div class="mx-auto">
                   {{incomeCategoriesName}}     
-                  <button type="button" value={{incomeCategoriesName}} data-value="income" class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editIncomeCategoryOrPaymentMethod"><i class="icon-pencil-squared">Edit</i></button>
-                  <button type="button" value={{incomeCategoriesName}} data-value="income" class="edit btn-categories deleteButton" style="size:15px;" data-toggle="modal" data-target="#deleteModal"><i class="icon-trash">Delete</i></button>
+                  <button type="button" value="{{incomeCategoriesName}}" data-value="income" class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editIncomeCategoryOrPaymentMethod"><i class="icon-pencil-squared">Edit</i></button>
+                  <button type="button" value="{{incomeCategoriesName}}" data-value="income" class="edit btn-categories deleteButton" style="size:15px;" data-toggle="modal" data-target="#deleteModal"><i class="icon-trash">Delete</i></button>
                 </div>
                 {%endfor%}
                 <div class="mx-auto">
@@ -272,8 +273,8 @@
               {%for expenseCategoriesName in setting.expenseCategoriesNames %}
               <div class="mx-auto">
                 {{expenseCategoriesName}}     
-                <button type="button" value={{expenseCategoriesName}} class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editExpenseCategory"><i class="icon-pencil-squared">Edit</i></button>
-                <button type="button" value={{expenseCategoriesName}} data-value="expense" class="edit btn-categories deleteButton" style="size:15px;" data-toggle="modal" data-target="#deleteModal"><i class="icon-trash">Delete</i></button>
+                <button type="button" value="{{expenseCategoriesName}}" class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editExpenseCategory"><i class="icon-pencil-squared">Edit</i></button>
+                <button type="button" value="{{expenseCategoriesName}}" data-value="expense" class="edit btn-categories deleteButton" style="size:15px;" data-toggle="modal" data-target="#deleteModal"><i class="icon-trash">Delete</i></button>
               </div>
               {%endfor%}
               <div class="mx-auto">
@@ -295,8 +296,8 @@
             {%for paymentMethodName in setting.paymentMethodsNames %}
             <div class="mx-auto">
               {{paymentMethodName}}     
-              <button type="button" value={{paymentMethodName}} data-value="method"  class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editIncomeCategoryOrPaymentMethod"><i class="icon-pencil-squared">Edit</i></button>
-              <button type="button" value={{paymentMethodName}}  data-value="method" class="edit btn-categories deleteButton" style="size:15px;" data-toggle="modal" data-target="#deleteModal"><i class="icon-trash">Delete</i></button>
+              <button type="button" value="{{paymentMethodName}}" data-value="method"  class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editIncomeCategoryOrPaymentMethod"><i class="icon-pencil-squared">Edit</i></button>
+              <button type="button" value="{{paymentMethodName}}"  data-value="method" class="edit btn-categories deleteButton" style="size:15px;" data-toggle="modal" data-target="#deleteModal"><i class="icon-trash">Delete</i></button>
             </div>
             {%endfor%}
             <button type="button" class="btn btn-success add" data-toggle="modal" value="method" data-target="#addNewCategoryOrPaymentMethodModal">Add new payment method</button>
