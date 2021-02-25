@@ -3,7 +3,8 @@
 namespace App\Controllers;
 
 use \Core\View;
-use App\Models\Settings;
+use \App\Flash;
+use \App\Models\Settings;
 
 class Setting extends Authenticated
 {
@@ -33,15 +34,33 @@ class Setting extends Authenticated
     }
 
     public function changeCategoryOrPaymentMethodAction(){
-        Settings::changeCategoryOrPaymentMethod();
+        if(Settings::changeCategoryOrPaymentMethod()){
+            Flash::addMessage("Choosen item is changed.");
+            $setting=new Settings($_POST);
+            View::renderTemplate('Setting/index.html',[
+                'setting'=>$setting
+            ]);
+        }
     }
 
     public function addNewCategoryOrPaymentMethodAction(){
-        Settings::addNewCategoryOrPaymentMethod();
+        if(Settings::addNewCategoryOrPaymentMethod()){
+            Flash::addMessage("New item is added.");
+            $setting=new Settings($_POST);
+            View::renderTemplate('Setting/index.html',[
+                'setting'=>$setting
+            ]);
+        }
     }
 
     public function deleteCategoryOrPaymentMethodAction(){
-        Settings::deleteCategoryOrPaymentMethod();
+        if(Settings::deleteCategoryOrPaymentMethod()){
+            Flash::addMessage("Choosen item is deleted.",'warning');
+            $setting=new Settings($_POST);
+            View::renderTemplate('Setting/index.html',[
+                'setting'=>$setting
+            ]);
+        }
     }
 
     /**
