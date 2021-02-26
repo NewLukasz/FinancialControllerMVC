@@ -27,9 +27,12 @@ class Settings extends \Core\Model{
             $this->incomeCategoriesNames[]=FinancialMovement::getCategoryOrMethodNameById($incomeCategory, static::getUserTableWithIncomesCategory());
         }
 
-        $this->expenseCategoriesNames=[];
-        foreach($this->expenseCategoriesID as $expenseCategory){
-            $this->expenseCategoriesNames[]=FinancialMovement::getCategoryOrMethodNameById($expenseCategory, static::getUserTableWithExpensesCategory());
+        $this->expenseCategoriesNamesAndLimits=[];
+        foreach($this->expenseCategoriesID as $expenseCategoryID){
+            $this->expenseCategoriesNamesAndLimits[]=array(
+                'name'=>FinancialMovement::getCategoryOrMethodNameById($expenseCategoryID, static::getUserTableWithExpensesCategory()),
+                'limit'=>static::getLimitForExpenseById($expenseCategoryID,static::getUserTableWithExpensesCategory())
+            );
         }
 
         $this->paymentMethodsNames=[];
@@ -142,6 +145,18 @@ class Settings extends \Core\Model{
 
     public static function setChangePaymentMethodsSettingFlagON(){
         $_SESSION['methodsChangeSettingFlag']=true;
+    }
+
+    public static function getLimitForExpenseById($id, $tableWithData){
+        $sql="SELECT * FROM ".$tableWithData." WHERE id=:id";
+        $db=static::getDB();
+        $stmt=$db->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $result=$stmt->fetch(PDO::FETCH_ASSOC);
+        if(isset($result['expense_limit'])){
+            return $result['expense_limit'];
+        }
     }
 
 }

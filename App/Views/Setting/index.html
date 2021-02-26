@@ -287,11 +287,12 @@
         <div class="card-body">
           <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
             <div class="btn-group-vertical mr-2  w-100" role="group" aria-label="First group">
-              {%for expenseCategoriesName in setting.expenseCategoriesNames %}
+              {%for expense in setting.expenseCategoriesNamesAndLimits %}
               <div class="mx-auto">
-                {{expenseCategoriesName}}     
-                <button type="button" value="{{expenseCategoriesName}}" class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editExpenseCategory"><i class="icon-pencil-squared">Edit</i></button>
-                <button type="button" value="{{expenseCategoriesName}}" data-value="expense" class="edit btn-categories deleteButton" style="size:15px;" data-toggle="modal" data-target="#deleteModal"><i class="icon-trash">Delete</i></button>
+                  {{expense.name}} {% if expense.limit!=0 %} <label style="font-size:15px;">(Current limit: {{expense.limit}})</label>  {%endif%}
+                  <button type="button" value="{{expense.name}}" class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editExpenseCategory"><i class="icon-pencil-squared">Edit</i></button>
+                  <button type="button" value="{{expense.name}}" data-value="expense" class="edit btn-categories deleteButton" style="size:15px;" data-toggle="modal" data-target="#deleteModal"><i class="icon-trash">Delete</i></button>
+                  
               </div>
               {%endfor%}
               <div class="mx-auto">
