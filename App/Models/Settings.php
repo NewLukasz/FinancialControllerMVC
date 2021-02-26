@@ -10,6 +10,8 @@ use \App\Models\FinancialMovement;
 
 class Settings extends \Core\Model{
 
+    public $errors = [];
+
     public function __construct($data = [])
     {
         foreach ($data as $key => $value) {
@@ -45,7 +47,7 @@ class Settings extends \Core\Model{
             $tableWithCategories=static::getCorrectTableToInsertData($_POST['whatToChange']);
     
             if(isset($_POST['limit'])){
-                static::addLimit(FinancialMovement::getCategoryOrMethodIdByName($nameToChange, $tableWithCategories),$_POST['limit'],$tableWithCategories);
+                 static::addLimit(FinancialMovement::getCategoryOrMethodIdByName($nameToChange, $tableWithCategories),$_POST['limit'],$tableWithCategories);
             }
     
             if(!empty($_POST['newName'])){
@@ -60,6 +62,28 @@ class Settings extends \Core\Model{
         }
         return true;
     }
+
+    public function validateLimit($limit){
+        $limit=FinancialMovement::checkCommaAndChangeForDot($limit);
+        
+        if(!is_numeric($limit)){
+            $this->errors[]="Wrong value of amount";
+        }else{
+            if(FinancialMovement::checkHowManyDecimalPlacesHasAmount($limit)>2){
+                $this->errors[]='Your amount has more than two decimal places.';
+            }
+            if($limit==''){
+                $this->erorrs[]='Amount is required';
+            }
+        }
+        if(empty($this->errors)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
     protected static function addLimit($id,$limit,$tableWithCategories){
         $sql="UPDATE ".$tableWithCategories." SET expense_limit=:expense_limit  WHERE id=:id ";
         $db=static::getDB();

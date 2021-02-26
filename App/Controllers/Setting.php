@@ -34,12 +34,31 @@ class Setting extends Authenticated
     }
 
     public function changeCategoryOrPaymentMethodAction(){
-        if(Settings::changeCategoryOrPaymentMethod()){
-            Flash::addMessage("Choosen item is changed.");
-            $setting=new Settings($_POST);
-            View::renderTemplate('Setting/index.html',[
-                'setting'=>$setting
-            ]);
+        $setting=new Settings($_POST);
+        if(isset($_POST['limit'])){
+            if($setting->validateLimit($_POST['limit'])){
+                if(Settings::changeCategoryOrPaymentMethod()){
+                    Flash::addMessage("Choosen item is changed.");
+                    $setting=new Settings($_POST);
+                    View::renderTemplate('Setting/index.html',[
+                        'setting'=>$setting
+                    ]);
+                }
+            }else{
+                Flash::addMessage("Choosen item is not changed.",'warning');
+                $setting=new Settings($_POST);
+                View::renderTemplate('Setting/index.html',[
+                    'setting'=>$setting
+                    ]);
+            }
+        }else{
+            if(Settings::changeCategoryOrPaymentMethod()){
+                Flash::addMessage("Choosen item is changed.");
+                 $setting=new Settings($_POST);
+                View::renderTemplate('Setting/index.html',[
+                    'setting'=>$setting
+                ]);
+            }
         }
     }
 

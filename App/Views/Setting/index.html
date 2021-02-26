@@ -236,7 +236,17 @@
 </div>
 </div>
 
-<div class="container text-center mt-5">
+<div class="container text-center mt-3">
+  {% if setting.errors is not empty %}
+    <div class="container d-flex justify-content-center">
+        <p>Error:</p>
+        <ul>
+            {% for error in setting.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+  {%endif%}
   <div class="accordion" id="settings">
     <div class="card">
       <div class="card-header" id="headingOne">
