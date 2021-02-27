@@ -345,13 +345,7 @@
           </div>
           <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#settings">
             <div class="card-body">
-              <nav>
-                  <li><a href="/">Home</a></li>
-                  {% if current_user %}
-                      <li><a href="/profile/show">Profile</a></li>
-                      <li><a href="/logout">Log out</a></li>                                
-                  {% endif %}
-              </nav>
+              <a href="/profile/show">Profile</a>
             </div>
           </div>
         </div>
