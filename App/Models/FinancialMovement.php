@@ -67,7 +67,7 @@ class FinancialMovement extends \Core\Model
         }
     }
 
-    protected static function getCategoryOrMethodIdByName($name,$tableWithData){
+    public static function getCategoryOrMethodIdByName($name,$tableWithData){
         $userId=$_SESSION['user_id'];
         $sql="SELECT id FROM ".$tableWithData." WHERE name= :name AND user_id=".$userId;
         $db=static::getDB();
@@ -75,7 +75,9 @@ class FinancialMovement extends \Core\Model
         $stmt->bindValue(':name', $name, PDO::PARAM_STR);
         $stmt->execute();
         $result=$stmt->fetch(PDO::FETCH_ASSOC);
-        return $result['id'];
+        if(isset($result['id'])){
+            return $result['id'];
+        }
     }
 
     public static function getCategoryOrMethodNameById($id, $tableWithData){
@@ -173,7 +175,8 @@ class FinancialMovement extends \Core\Model
         static::fulfilUserTablesWithDefaultCategoriesAndPaymentMethods(
             $userId,
             static::getDefaultExpensesTable(),
-            static::getUserTableWithExpensesCategory()
+            static::getUserTableWithExpensesCategory(),
+            'expense'
         );
 
         static::fulfilUserTablesWithDefaultCategoriesAndPaymentMethods(
@@ -195,18 +198,26 @@ class FinancialMovement extends \Core\Model
         return $result['id'];
     }
 
-    public static function fulfilUserTablesWithDefaultCategoriesAndPaymentMethods($userId, $tableDefault, $tableUserCategory){
+    public static function fulfilUserTablesWithDefaultCategoriesAndPaymentMethods($userId, $tableDefault, $tableUserCategory, $indicator=0){
         $db=static::getDB();
         $defaultCategoriesQuery=$db->query(("SELECT name FROM ").$tableDefault);
         $defaultCategoriesResult=$defaultCategoriesQuery->fetchAll();
-        foreach($defaultCategoriesResult as $nameArray){
-            $name=$nameArray['name'];
-            $db->query("INSERT INTO ".$tableUserCategory." VALUES(NULL,'$userId','$name')");
+        if($indicator=='expense'){
+            foreach($defaultCategoriesResult as $nameArray){
+                $name=$nameArray['name'];
+                $db->query("INSERT INTO ".$tableUserCategory." VALUES(NULL,'$userId','$name',NULL)");
+            }
+        }else{
+            foreach($defaultCategoriesResult as $nameArray){
+                $name=$nameArray['name'];
+                $db->query("INSERT INTO ".$tableUserCategory." VALUES(NULL,'$userId','$name')");
+            }
         }
     }
 
     public static function getIncomeCategories(){
-        if(!isset($_SESSION['incomeCategories'])){
+        if(!isset($_SESSION['incomeCategories']) or isset($_SESSION['incomeChangeSettingFlag'])){
+            unset($_SESSION['incomeChangeSettingFlag']);
             return $_SESSION['incomeCategories']=static::getCategoriesAndMethodFromDB(static::getUserTableWithIncomesCategory());
         }else{
             return $_SESSION['incomeCategories'];
@@ -214,7 +225,8 @@ class FinancialMovement extends \Core\Model
     }
 
     public static function getExpenseCategories(){
-        if(!isset($_SESSION['expenseCategories'])){
+        if(!isset($_SESSION['expenseCategories']) or isset($_SESSION['expenseChangeSettingFlag'])){
+            unset($_SESSION['expenseChangeSettingFlag']);
             return $_SESSION['expenseCategories']=static::getCategoriesAndMethodFromDB(static::getUserTableWithExpensesCategory());
         }else{
             return $_SESSION['expenseCategories'];
@@ -222,7 +234,8 @@ class FinancialMovement extends \Core\Model
     }
 
     public static function getPaymentMethods(){
-        if(!isset($_SESSION['paymentMethods'])){
+        if(!isset($_SESSION['paymentMethods'])  or isset($_SESSION['methodsChangeSettingFlag'])){
+            unset($_SESSION['methodsChangeSettingFlag']);
             return $_SESSION['paymentMethods']=static::getCategoriesAndMethodFromDB(static::getUserTableWithPaymentMethods());
         }else{
             return $_SESSION['paymentMethods'];

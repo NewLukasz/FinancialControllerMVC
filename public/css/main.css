@@ -97,3 +97,25 @@ footer
 {
 	width: 1200px;
 }
+
+.btn-categories
+{
+	border: none;
+	color: grey;
+	background-color: white;
+	text-align: center;
+	padding: 10px 10px;
+	font-size: 15px;
+}
+
+.btn-categories:hover
+{
+	color: black;
+}
+
+.btn-categories:focus
+{
+	color: dark;
+	outline:none;
+	background-color: white;
+}

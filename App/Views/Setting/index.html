@@ -2,19 +2,359 @@
 
 {% block title %}Setting{% endblock %}
 
-{% block body %}
-    <div class="container text-center">
-        <h1>Setting</h1>
 
-        <p>Settings here.</p>
-        <nav>
-            
-                <li><a href="/">Home</a></li>
-                {% if current_user %}
-                    <li><a href="/profile/show">Profile</a></li>
-                    <li><a href="/logout">Log out</a></li>                                
-                {% endif %}
-            
-        </nav>
+{% block footer %}
+<script>
+  $(document).ready(function(){
+    $(checkBox1).click(function(){
+      var isDisabled=$(limit).prop('disabled');
+      if(isDisabled){
+        $(limit).prop('disabled',false);
+      }else{
+        $(limit).prop('disabled',true);
+      }
+    });
+  });
+
+  $(".edit").click(function(){
+    var categoryName= $(this).attr('value');
+    var destination=$(this).attr('data-value');
+    if(destination=='income'){
+      $("#incomeCategoryAndPaymentMethodNameHeader").html(categoryName);
+      $("#categoryNameToChange").val(categoryName);
+      $("#whatToChange").val('incomeCategory');
+    }else if(destination=='method'){
+      $("#incomeCategoryAndPaymentMethodNameHeader").html(categoryName);
+      $("#categoryNameToChange").val(categoryName);
+      $("#whatToChange").val('paymentMethod');
+    }else{
+      $("#expenseCategoryNameHeader").html(categoryName);
+      $("#expenseCategoryName").val(categoryName);
+      var limit=$(this).attr('limit');
+      $("#limit").val(limit);
+    }
+  });
+
+  $(".add").click(function() {
+    var destination=$(this).attr('value');
+    if(destination=='income'){
+      $("#addingNewCategoryOrPaymentMethodHeader").html("Adding an new income category");
+      $("#whatToAdd").val('incomeCategory');
+    }else if(destination=='expense'){
+      $("#addingNewCategoryOrPaymentMethodHeader").html("Adding an new expense category");
+      $("#whatToAdd").val('expenseCategory');
+    }else if(destination=='method'){
+      $("#addingNewCategoryOrPaymentMethodHeader").html("Adding an new payment method");
+      $("#whatToAdd").val('paymentMethod');
+    }
+  });
+
+  $(".deleteButton").click(function(){
+    var destination=$(this).attr('data-value');
+    var nameOfCategoryToDelete=$(this).attr('value');
+    if(destination=='income'){
+      $('#deleteModalHeader').html("Deleting income category");
+      $('#whatToDelete').val('incomeCategory');
+      $('#categoryOrMethodNameToDelete').val(nameOfCategoryToDelete);
+    }else if(destination=='expense'){
+      $('#deleteModalHeader').html("Deleting expense category");
+      $('#whatToDelete').val('expenseCategory');
+      $('#categoryOrMethodNameToDelete').val(nameOfCategoryToDelete);
+    }else if(destination=='method'){
+      $('#deleteModalHeader').html("Deleting payment method");
+      $('#whatToDelete').val('paymentMethod');
+      $('#categoryOrMethodNameToDelete').val(nameOfCategoryToDelete);
+    }
+  });
+
+  $(function () {
+    $('[data-popover="popover"]').popover()
+  })
+
+  $('.popover-dismiss').popover({
+    trigger: 'focus'
+  })
+  
+</script>
+{%endblock%}
+
+{% block body %}
+<!--IncomeCategory/PaymentMethod modal-->
+<div class="modal fade" id="editIncomeCategoryOrPaymentMethod" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Editing: <label id="incomeCategoryAndPaymentMethodNameHeader"></label></h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/Setting/changeCategoryOrPaymentMethod" method="post">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Type new name below</label>
+            <div class="input-group mb-2 py-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon-pencil-squared"></i></span>
+              </div>
+              <input type="hidden" name="whatToChange" id="whatToChange">
+              <input type="hidden" name="categoryOrPaymentMethodName" id="categoryNameToChange">
+              <input autocomplete="off" name="newName" type="text" class="form-control" aria-label="Date">
+              </div>
+            </div>
+            <p>After change category name all item which align to this category are accessible by new category name. Example - in balance you will see new category name instead old one.</p>
+            <div class="row">
+              <div class="col-xs-4 d-flex justify-content-start w-50">
+                <button type="submit" class="btn btn-primary m-1">Change</button>
+              </div>
+              <div class="col-xs-4 d-flex justify-content-end w-50">
+                <button type="button" class="btn btn-secondary m-1" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
     </div>
+  </div>
+</div>
+</div>
+
+<!--Expense modal-->
+<div class="modal fade" id="editExpenseCategory" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><label id="expenseCategoryNameHeader"></label></h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/Setting/changeCategoryOrPaymentMethod" method="post">
+          <div class="modal-body">
+              <div class="form-group">
+                  <label>Type new name of category</label>
+                  <div class="input-group mb-2">
+                      <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="icon-pencil-squared"></i></span>
+                      </div>
+                      <input type="hidden" name="whatToChange" value="expenseCategory">
+                      <input type="hidden" name="categoryOrPaymentMethodName" id="expenseCategoryName">
+                      <input autocomplete="off" name="newName" type="text" class="form-control" aria-label="Date" data-content="If you want only add a limit, keep this place empty." data-placement="auto" data-trigger="hover" data-popover="popover">
+                  </div>
+                  <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="checkBox1">
+                    <label class="form-check-label" for="checkBox1" aria-label="Date" data-content="This limit will be visible during adding expense." data-placement="auto" data-trigger="hover" data-popover="popover">Edit limit functionality</label>
+                  </div>
+                  <label>Limit below</label>
+                  <div class="input-group mb-2">
+                      <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="icon-dollar"></i></span>
+                      </div>
+                      <input disabled autocomplete="off"  name="limit" id="limit" type="text" class="form-control" data-content="If you want to switch off limit type 0." data-placement="auto" data-trigger="hover" data-popover="popover">
+                  </div>
+                  <p>After change category name all item which align to this category are accessible by new category name. Example - in balance you will see new category name instead old one.</p>
+                  <p>Limit functionality allow you to insert limit to expenses which show you how many money you can spend according to your plan. This allows you easier reach your goals!</p>
+                  <div class="row">
+                      <div class="col-xs-4 d-flex justify-content-start w-50">
+                          <button type="submit" class="btn btn-primary m-1">Change</button>
+                      </div>
+                      <div class="col-xs-4 d-flex justify-content-end w-50">
+                          <button type="button" class="btn btn-secondary m-1" data-dismiss="modal">Close</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+
+<!--Adding new category or payment method modal-->
+<div class="modal fade" id="addNewCategoryOrPaymentMethodModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><label id="addingNewCategoryOrPaymentMethodHeader"></label></h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/Setting/addNewCategoryOrPaymentMethod" method="post">
+          <div class="modal-body">
+              <div class="form-group">
+                  Type name below:
+                  <div class="input-group mb-2 py-3">
+                      <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="icon-pencil-squared"></i></span>
+                      </div>
+                      <input type="hidden" name="whatToAdd" id="whatToAdd">
+                      <input autocomplete="off" name="newNameToAdd" type="text" class="form-control" aria-label="Date">
+                  </div>
+                  </div>
+                  <p>After add new item in this place you allow to use this during adding your financial movements and see it during analysing your balances.</p>
+                  <div class="row">
+                      <div class="col-xs-4 d-flex justify-content-start w-50">
+                          <button type="submit" class="btn btn-success m-1">Add new one</button>
+                      </div>
+                      <div class="col-xs-4 d-flex justify-content-end w-50">
+                          <button type="button" class="btn btn-secondary m-1" data-dismiss="modal">Close</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+
+<!--Delete modal-->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><label id="deleteModalHeader"></label></h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/Setting/deleteCategoryOrPaymentMethod" method="post">
+          <div class="modal-body">
+            <h1 class="text-center">
+              Warning
+            </h1>
+            Category will be deleted permanently and items which has align this category will be unreachable. 
+            Please be sure that you won't lost any data after deletion!
+            <h4 class="text-center mt-5">
+              After click "Delete permanently" button there no possibility to get back.
+            </h4>
+              <div class="form-group">
+                  <div class="input-group mb-2 py-3">
+                      <input type="hidden" name="whatToDelete" id="whatToDelete">
+                      <input type="hidden" name="categoryOrMethodNameToDelete" id="categoryOrMethodNameToDelete">
+                  </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-xs-4 d-flex justify-content-start w-50">
+                          <button type="submit" class="btn btn-danger m-1">Delete permanently</button>
+                      </div>
+                      <div class="col-xs-4 d-flex justify-content-end w-50">
+                          <button type="button" class="btn btn-secondary m-1" data-dismiss="modal">Close</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="container text-center mt-3">
+  {% if setting.errors is not empty %}
+    <div class="container d-flex justify-content-center">
+        <p>Error:</p>
+        <ul>
+            {% for error in setting.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+  {%endif%}
+  <div class="accordion" id="settings">
+    <div class="card">
+      <div class="card-header" id="headingOne">
+        <h2 class="mb-0">
+          <button class="btn btn-primary collapsed" type="button" data-toggle="collapse"  data-target="#collapseOne" aria-expanded="true"  aria-controls="collapseOne" data-content="In this place you can add new income category, edit existing or add new one." data-placement="top" data-trigger="hover" data-popover="popover">
+            Incomes categories
+          </button>
+        </h2>
+      </div>
+      <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#settings">
+        <div class="card-body">
+          <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+              <div class="btn-group-vertical mr-2  w-100" role="group" aria-label="First group">
+                {%for incomeCategoriesName in setting.incomeCategoriesNames %}
+                <div class="mx-auto">
+                  {{incomeCategoriesName}}     
+                  <button type="button" value="{{incomeCategoriesName}}" data-value="income" class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editIncomeCategoryOrPaymentMethod"><i class="icon-pencil-squared">Edit</i></button>
+                  <button type="button" value="{{incomeCategoriesName}}" data-value="income" class="edit btn-categories deleteButton" style="size:15px;" data-toggle="modal" data-target="#deleteModal"><i class="icon-trash">Delete</i></button>
+                </div>
+                {%endfor%}
+                <div class="mx-auto">
+                  <button type="button" class="btn btn-success add" data-toggle="modal" value="income" data-target="#addNewCategoryOrPaymentMethodModal">Add new income category</button>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header" id="headingTwo">
+        <h2 class="mb-0">
+          <button class="btn btn-primary collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" data-content="In this place you can add new expenses category, edit existing, add new one or add limit for each category." data-placement="top" data-trigger="hover" data-popover="popover">
+            Expenses Categories
+          </button>
+        </h2>
+      </div>
+      <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#settings">
+        <div class="card-body">
+          <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group-vertical mr-2  w-100" role="group" aria-label="First group">
+              {%for expense in setting.expenseCategoriesNamesAndLimits %}
+              <div class="mx-auto">
+                  {{expense.name}} 
+                  {% if expense.limit!=0 %} 
+                    <label style="font-size:15px;">(Current limit: {{expense.limit}})</label>  
+                    <button type="button" value="{{expense.name}}" limit="{{expense.limit}}" class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editExpenseCategory"><i class="icon-pencil-squared">Edit</i></button>
+                  {% else %}
+                    <button type="button" value="{{expense.name}}" class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editExpenseCategory"><i class="icon-pencil-squared">Edit</i></button>
+                  {%endif%}
+                  <button type="button" value="{{expense.name}}" data-value="expense" class="edit btn-categories deleteButton" style="size:15px;" data-toggle="modal" data-target="#deleteModal"><i class="icon-trash">Delete</i></button>
+                  
+              </div>
+              {%endfor%}
+              <div class="mx-auto">
+                <button type="button" class="btn btn-success add" data-toggle="modal" value="expense" data-target="#addNewCategoryOrPaymentMethodModal">Add new expense category</button>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+    </div>
+      <div class="card">
+        <div class="card-header" id="headingThree">
+          <h2 class="mb-0">
+            <button class="btn btn-primary collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" data-content="In this place you can add new payments methods, edit existing or add new one." data-placement="top" data-trigger="hover" data-popover="popover">Payment Methods</button>
+          </h2>
+        </div>
+        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#settings">
+          <div class="card-body">
+            {%for paymentMethodName in setting.paymentMethodsNames %}
+            <div class="mx-auto">
+              {{paymentMethodName}}     
+              <button type="button" value="{{paymentMethodName}}" data-value="method"  class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editIncomeCategoryOrPaymentMethod"><i class="icon-pencil-squared">Edit</i></button>
+              <button type="button" value="{{paymentMethodName}}"  data-value="method" class="edit btn-categories deleteButton" style="size:15px;" data-toggle="modal" data-target="#deleteModal"><i class="icon-trash">Delete</i></button>
+            </div>
+            {%endfor%}
+            <button type="button" class="btn btn-success add" data-toggle="modal" value="method" data-target="#addNewCategoryOrPaymentMethodModal">Add new payment method</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+          <div class="card-header" id="headingFour">
+            <h2 class="mb-0">
+              <button class="btn btn-primary collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour" data-content="In this place you can modify setting in connection with your user account." data-placement="top" data-trigger="hover" data-popover="popover">
+                User settings
+              </button>
+            </h2>
+          </div>
+          <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#settings">
+            <div class="card-body">
+              <a href="/profile/show">Profile</a>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
 {% endblock %}
