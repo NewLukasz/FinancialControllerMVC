@@ -27,9 +27,12 @@
       $("#incomeCategoryAndPaymentMethodNameHeader").html(categoryName);
       $("#categoryNameToChange").val(categoryName);
       $("#whatToChange").val('paymentMethod');
+    }else{
+      $("#expenseCategoryNameHeader").html(categoryName);
+      $("#expenseCategoryName").val(categoryName);
+      var limit=$(this).attr('limit');
+      $("#limit").val(limit);
     }
-    $("#expenseCategoryNameHeader").html(categoryName);
-    $("#expenseCategoryName").val(categoryName);
   });
 
   $(".add").click(function() {
@@ -81,32 +84,33 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title"><label id="incomeCategoryAndPaymentMethodNameHeader"></label></h5>
+        <h5 class="modal-title">Editing: <label id="incomeCategoryAndPaymentMethodNameHeader"></label></h5>
         <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
       </div>
       <form action="/Setting/changeCategoryOrPaymentMethod" method="post">
-          <div class="modal-body">
-              <div class="form-group">
-                  <label>Type new name below</label>
-                  <div class="input-group mb-2 py-3">
-                      <div class="input-group-prepend">
-                              <span class="input-group-text"><i class="icon-pencil-squared"></i></span>
-                      </div>
-                      <input type="hidden" name="whatToChange" id="whatToChange">
-                      <input type="hidden" name="categoryOrPaymentMethodName" id="categoryNameToChange">
-                      <input autocomplete="off" name="newName" type="text" class="form-control" aria-label="Date">
-                  </div>
-                  </div>
-                  <div class="row">
-                      <div class="col-xs-4 d-flex justify-content-start w-50">
-                          <button type="submit" class="btn btn-primary m-1">Change</button>
-                      </div>
-                      <div class="col-xs-4 d-flex justify-content-end w-50">
-                          <button type="button" class="btn btn-secondary m-1" data-dismiss="modal">Close</button>
-                      </div>
-                  </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Type new name below</label>
+            <div class="input-group mb-2 py-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="icon-pencil-squared"></i></span>
               </div>
+              <input type="hidden" name="whatToChange" id="whatToChange">
+              <input type="hidden" name="categoryOrPaymentMethodName" id="categoryNameToChange">
+              <input autocomplete="off" name="newName" type="text" class="form-control" aria-label="Date">
+              </div>
+            </div>
+            <p>After change category name all item which align to this category are accessible by new category name. Example - in balance you will see new category name instead old one.</p>
+            <div class="row">
+              <div class="col-xs-4 d-flex justify-content-start w-50">
+                <button type="submit" class="btn btn-primary m-1">Change</button>
+              </div>
+              <div class="col-xs-4 d-flex justify-content-end w-50">
+                <button type="button" class="btn btn-secondary m-1" data-dismiss="modal">Close</button>
+              </div>
+            </div>
           </div>
+        </div>
       </form>
     </div>
   </div>
@@ -135,15 +139,17 @@
                   </div>
                   <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="checkBox1">
-                    <label class="form-check-label" for="checkBox1" aria-label="Date" data-content="This limit will be visible during adding expense." data-placement="auto" data-trigger="hover" data-popover="popover">Switch on or change limit</label>
+                    <label class="form-check-label" for="checkBox1" aria-label="Date" data-content="This limit will be visible during adding expense." data-placement="auto" data-trigger="hover" data-popover="popover">Edit limit functionality</label>
                   </div>
-                  <label>Type limit for category</label>
+                  <label>Limit below</label>
                   <div class="input-group mb-2">
                       <div class="input-group-prepend">
                               <span class="input-group-text"><i class="icon-dollar"></i></span>
                       </div>
-                      <input disabled autocomplete="off"  name="limit" id="limit" type="text" class="form-control" >
+                      <input disabled autocomplete="off"  name="limit" id="limit" type="text" class="form-control" data-content="If you want to switch off limit type 0." data-placement="auto" data-trigger="hover" data-popover="popover">
                   </div>
+                  <p>After change category name all item which align to this category are accessible by new category name. Example - in balance you will see new category name instead old one.</p>
+                  <p>Limit functionality allow you to insert limit to expenses which show you how many money you can spend according to your plan. This allows you easier reach your goals!</p>
                   <div class="row">
                       <div class="col-xs-4 d-flex justify-content-start w-50">
                           <button type="submit" class="btn btn-primary m-1">Change</button>
@@ -180,6 +186,7 @@
                       <input autocomplete="off" name="newNameToAdd" type="text" class="form-control" aria-label="Date">
                   </div>
                   </div>
+                  <p>After add new item in this place you allow to use this during adding your financial movements and see it during analysing your balances.</p>
                   <div class="row">
                       <div class="col-xs-4 d-flex justify-content-start w-50">
                           <button type="submit" class="btn btn-success m-1">Add new one</button>
@@ -289,8 +296,13 @@
             <div class="btn-group-vertical mr-2  w-100" role="group" aria-label="First group">
               {%for expense in setting.expenseCategoriesNamesAndLimits %}
               <div class="mx-auto">
-                  {{expense.name}} {% if expense.limit!=0 %} <label style="font-size:15px;">(Current limit: {{expense.limit}})</label>  {%endif%}
-                  <button type="button" value="{{expense.name}}" class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editExpenseCategory"><i class="icon-pencil-squared">Edit</i></button>
+                  {{expense.name}} 
+                  {% if expense.limit!=0 %} 
+                    <label style="font-size:15px;">(Current limit: {{expense.limit}})</label>  
+                    <button type="button" value="{{expense.name}}" limit="{{expense.limit}}" class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editExpenseCategory"><i class="icon-pencil-squared">Edit</i></button>
+                  {% else %}
+                    <button type="button" value="{{expense.name}}" class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editExpenseCategory"><i class="icon-pencil-squared">Edit</i></button>
+                  {%endif%}
                   <button type="button" value="{{expense.name}}" data-value="expense" class="edit btn-categories deleteButton" style="size:15px;" data-toggle="modal" data-target="#deleteModal"><i class="icon-trash">Delete</i></button>
                   
               </div>
