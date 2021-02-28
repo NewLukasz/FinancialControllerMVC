@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use \Core\View;
 use \App\Models\FinancialMovement;
+use \App\Models\Balance;
 use \App\Flash;
 use \App\Auth;
 
@@ -88,6 +89,19 @@ class AddFinancialMovement extends Authenticated
             ]);
         }
     }
+
+    public function showDifferenceInCaseOfLimitAction(){
+        if(isset($_POST['amount'])){
+            View::renderTemplate('AddFinancialMovement/SummaryViewInCaseOfLimit.html',[
+                'amount'=>$_POST['amount'],
+                'category'=>$_POST['category'],
+                'limit'=>FinancialMovement::getLimitForExpenseForCurrentMonthBasedOnName($_POST['category']),
+                'currentSpended'=>Balance::countValueOfExpensesForOneCategoryFromCurrentMonth($_POST['category'])
+            ]);
+        }
+    }
+
+    
     /**
      * Show an item
      *

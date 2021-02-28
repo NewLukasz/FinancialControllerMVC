@@ -228,6 +228,21 @@ class Balance extends \Core\Model
         }
         return $categoryNameAndAmountValue;
     }
+
+    public static function countValueOfExpensesForOneCategoryFromCurrentMonth($name){
+        $firstLimitDate=static::getTodaysDate()[0];
+        $secondLimitDate=static::getTodaysDate()[1];
+        $categoryId=FinancialMovement::getCategoryOrMethodIdByName($name,static::getUserTableWithExpensesCategory());
+        $sql="SELECT SUM(amount) AS summary from expenses WHERE expense_category_assigned_to_user_id='".$categoryId."' AND date_of_expense>= '".$firstLimitDate."' AND date_of_expense<= '".$secondLimitDate."'";
+        $db=static::getDB();
+        $stmt=$db->prepare($sql);
+        $stmt->execute();
+        $result=$stmt->fetch();
+        if($result['summary']){
+            return $result['summary'];
+        }
+    }
+
     protected static function getCategoriesOrPaymentMethodsAssignedToUser($table){
         $db=static::getDB();
         $userId=$_SESSION['user_id'];
