@@ -217,7 +217,7 @@ class FinancialMovement extends \Core\Model
         if($indicator=='expense'){
             foreach($defaultCategoriesResult as $nameArray){
                 $name=$nameArray['name'];
-                $db->query("INSERT INTO ".$tableUserCategory." VALUES(NULL,'$userId','$name',NULL)");
+                $db->query("INSERT INTO ".$tableUserCategory."(id,user_id,name) VALUES(NULL,'$userId','$name')");
             }
         }else{
             foreach($defaultCategoriesResult as $nameArray){
