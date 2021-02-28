@@ -44,14 +44,11 @@ class Settings extends \Core\Model{
     public static function changeCategoryOrPaymentMethod()
     {
         if(isset($_POST['newName'])){
+            
             $userId=$_SESSION['user_id'];
             $newName=$_POST['newName'];
             $nameToChange=$_POST['categoryOrPaymentMethodName'];
             $tableWithCategories=static::getCorrectTableToInsertData($_POST['whatToChange']);
-    
-            if(isset($_POST['limit'])){
-                 static::addLimit(FinancialMovement::getCategoryOrMethodIdByName($nameToChange, $tableWithCategories),$_POST['limit'],$tableWithCategories);
-            }
     
             if(!empty($_POST['newName'])){
                 $id=FinancialMovement::getCategoryOrMethodIdByName($nameToChange, $tableWithCategories);
@@ -76,7 +73,7 @@ class Settings extends \Core\Model{
                 $this->errors[]='Your amount has more than two decimal places.';
             }
             if($limit==''){
-                $this->erorrs[]='Amount is required';
+                $this->errors[]='Amount is required';
             }
         }
         if(empty($this->errors)){
@@ -86,8 +83,37 @@ class Settings extends \Core\Model{
         }
     }
 
+    public function checkThatNameIsAvailable($whatToChange, $nameToCheck){
+        if($whatToChange=="expenseCategory"){
+            foreach($this->expenseCategoriesNamesAndLimits as $expenseCategoryData){
+                 if($expenseCategoryData['name']==$nameToCheck){
+                    $this->errors[]='Name is already in use. Please use different one.';
+                     return false;
+                 }
+            }
+        }elseif($whatToChange=="incomeCategory"){
+            foreach($this->incomeCategoriesNames as $incomeCategoryName){
+                if($incomeCategoryName==$nameToCheck){
+                    $this->errors[]='Name is already in use. Please use different one.';
+                     return false;
+                }
+            }
+        }elseif($whatToChange=="paymentMethod"){
+            foreach($this->paymentMethodsNames as $paymentMethodName){
+                if($paymentMethodName==$nameToCheck){
+                    $this->errors[]='Name is already in use. Please use different one.';
+                     return false;
+                }
+            }
+        }
+        return true;
+    }
 
-    protected static function addLimit($id,$limit,$tableWithCategories){
+    public function addLimit(){
+        $nameToChange=$_POST['categoryOrPaymentMethodName'];
+        $tableWithCategories=static::getCorrectTableToInsertData($_POST['whatToChange']);
+        $limit=$_POST['limit'];
+        $id=FinancialMovement::getCategoryOrMethodIdByName($nameToChange, $tableWithCategories);
         $sql="UPDATE ".$tableWithCategories." SET expense_limit=:expense_limit  WHERE id=:id ";
         $db=static::getDB();
         $stmt=$db->prepare($sql);

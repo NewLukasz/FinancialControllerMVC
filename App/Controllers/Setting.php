@@ -37,8 +37,27 @@ class Setting extends Authenticated
         $setting=new Settings($_POST);
         if(isset($_POST['limit'])){
             if($setting->validateLimit($_POST['limit'])){
+                $setting->addLimit();
+                Flash::addMessage("Limit is updated.");
+                if($_POST['newName']==""){
+                    $setting=new Settings($_POST);
+                    View::renderTemplate('Setting/index.html',[
+                    'setting'=>$setting
+                ]);
+                }
+            }else{
+                Flash::addMessage("Limit isn't updated.",'warning');
+                if($_POST['newName']==""){
+                    View::renderTemplate('Setting/index.html',[
+                        'setting'=>$setting
+                    ]);
+                }
+            }
+        }
+        if(isset($_POST['newName']) and $_POST['newName']!=""){
+            if($setting->checkThatNameIsAvailable($_POST['whatToChange'],$_POST['newName'])){
                 if(Settings::changeCategoryOrPaymentMethod()){
-                    Flash::addMessage("Choosen item is changed.");
+                    Flash::addMessage("Name is changed.");
                     $setting=new Settings($_POST);
                     View::renderTemplate('Setting/index.html',[
                         'setting'=>$setting
@@ -46,19 +65,15 @@ class Setting extends Authenticated
                 }
             }else{
                 Flash::addMessage("Choosen item is not changed.",'warning');
-                $setting=new Settings($_POST);
-                View::renderTemplate('Setting/index.html',[
-                    'setting'=>$setting
-                    ]);
-            }
-        }else{
-            if(Settings::changeCategoryOrPaymentMethod()){
-                Flash::addMessage("Choosen item is changed.");
-                 $setting=new Settings($_POST);
                 View::renderTemplate('Setting/index.html',[
                     'setting'=>$setting
                 ]);
             }
+        }
+        if(!isset($_POST['newName'])){
+            View::renderTemplate('Setting/index.html',[
+                'setting'=>$setting
+            ]);
         }
     }
 
