@@ -1,0 +1,40 @@
+{% if limit>0%}
+<div class="border border-secondary rounded text-center my-2">
+    <div>   
+        <h5>{{category}} has switched on limit function.</h5>
+        Balance for current month below:
+    </div>
+    <table style="width:100%">
+        <tr>
+          <th>Category</th>
+          <th>Limit</th>
+          <th>Was spent</th>
+          <th>Intended spend</th>
+          <th>Balance after spend*</th>
+        </tr>
+        <tr>
+          <td>{{category}}</td>
+          <td>{{limit}}</td>
+          <td>{%if currentSpended!=0 %} {{currentSpended}}  {% else %} 0 {%endif%}</td>
+          <td>{{amount}}</td>
+          <td>{{limit-currentSpended-amount}}</td>
+        </tr>
+      </table>
+      <div>
+          {%if limit-currentSpended-amount>0%}
+          <div class="p-3 bg-success text-white">
+            After spent {{amount}} you don't exceed your limit.
+          </div>
+          {%else%}
+          <div class="p-3 bg-danger text-white">
+            After spent {{amount}} you exceed your limit.
+          </div>
+          {%endif%}
+      </div>
+      <div style="font-size: 12px;">
+          *Balance after spend = Limit- Was spent- Intented spend
+      </div>
+</div>
+{%endif%}
+
+
