@@ -22,10 +22,16 @@
     function showLimitDifference(){
       var insertedAmount=$("#amount").val();
       var choosenCategory=$("#expenseCategory").val();
+      var expenseDate=$("#datePickerSession").val();
+      if(typeof expenseDate=='undefined'){
+        var expenseDate=$("#datePicker").val();
+      }
+      
       if(insertedAmount>0){
         $.post("/addFinancialMovement/showDifferenceInCaseOfLimit",{
           amount: insertedAmount,
-          category: choosenCategory
+          category: choosenCategory,
+          date: expenseDate
         }, function(data){
           $("#summaryInCaseOfLimit").html(data);
       });
@@ -70,9 +76,9 @@
       <span class="input-group-text"><i class="icon-calendar"></i></span>
       </div>
         {%if expense%}
-          <input id="datePickerSession"  name="date" value="{{expense.date}}" type="text" class="form-control" aria-label="Date" >
+          <input id="datePickerSession"   name="date" value="{{expense.date}}" type="text" class="form-control" aria-label="Date" >
         {%else%}
-          <input id="datePicker"  name="date" type="text" class="form-control" aria-label="Date" >
+          <input id="datePicker"   name="date" type="text" class="form-control" aria-label="Date" >
         {%endif%}
     </div>
   </div>

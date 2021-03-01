@@ -91,12 +91,13 @@ class AddFinancialMovement extends Authenticated
     }
 
     public function showDifferenceInCaseOfLimitAction(){
+        print_r($_POST);
         if(isset($_POST['amount'])){
             View::renderTemplate('AddFinancialMovement/SummaryViewInCaseOfLimit.html',[
                 'amount'=>$_POST['amount'],
                 'category'=>$_POST['category'],
-                'limit'=>FinancialMovement::getLimitForExpenseForCurrentMonthBasedOnName($_POST['category']),
-                'currentSpended'=>Balance::countValueOfExpensesForOneCategoryFromCurrentMonth($_POST['category'])
+                'limit'=>FinancialMovement::getLimitForExpenseBasedOnName($_POST['category']),
+                'currentSpended'=>Balance::countValueOfExpensesForOneCategoryFromIndicatedMonth($_POST['category'], $_POST['date'])
             ]);
         }
     }

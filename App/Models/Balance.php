@@ -229,7 +229,8 @@ class Balance extends \Core\Model
         return $categoryNameAndAmountValue;
     }
 
-    public static function countValueOfExpensesForOneCategoryFromCurrentMonth($name){
+    public static function countValueOfExpensesForOneCategoryFromIndicatedMonth($name,$indicatedMonth){
+        echo $indicatedMonth;
         $firstLimitDate=static::getTodaysDate()[0];
         $secondLimitDate=static::getTodaysDate()[1];
         $categoryId=FinancialMovement::getCategoryOrMethodIdByName($name,static::getUserTableWithExpensesCategory());
