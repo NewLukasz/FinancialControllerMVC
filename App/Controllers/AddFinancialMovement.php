@@ -95,8 +95,10 @@ class AddFinancialMovement extends Authenticated
             View::renderTemplate('AddFinancialMovement/SummaryViewInCaseOfLimit.html',[
                 'amount'=>$_POST['amount'],
                 'category'=>$_POST['category'],
-                'limit'=>FinancialMovement::getLimitForExpenseForCurrentMonthBasedOnName($_POST['category']),
-                'currentSpended'=>Balance::countValueOfExpensesForOneCategoryFromCurrentMonth($_POST['category'])
+                'limit'=>FinancialMovement::getLimitForExpenseBasedOnName($_POST['category']),
+                'currentSpended'=>Balance::countValueOfExpensesForOneCategoryFromIndicatedMonth($_POST['category'], $_POST['date']),
+                'firstLimitDate'=>Balance::getFirstDayOfMonth($_POST['date']),
+                'secondLimitDate'=>Balance::getLastDayOfMonth($_POST['date'])
             ]);
         }
     }

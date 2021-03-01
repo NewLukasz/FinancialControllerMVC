@@ -101,6 +101,14 @@ class Balance extends \Core\Model
         return date('Y-m-d', strtotime('first day of last month',strtotime($date)));
     }
 
+    public static function getFirstDayOfMonth($date){
+        return date('Y-m-d',strtotime('first day of this month',strtotime($date)));
+    }
+
+    public static function getLastDayOfMonth($date){
+        return date('Y-m-d',strtotime('last day of this month',strtotime($date)));
+    }
+
     public static function getTodaysDate(){
         $dateWithFirstDayOfCurrentMounth=date("Y-m-1");
 	    $d= new DateTime($dateWithFirstDayOfCurrentMounth);
@@ -229,9 +237,9 @@ class Balance extends \Core\Model
         return $categoryNameAndAmountValue;
     }
 
-    public static function countValueOfExpensesForOneCategoryFromCurrentMonth($name){
-        $firstLimitDate=static::getTodaysDate()[0];
-        $secondLimitDate=static::getTodaysDate()[1];
+    public static function countValueOfExpensesForOneCategoryFromIndicatedMonth($name,$indicatedMonth){
+        $firstLimitDate=static::getFirstDayOfMonth($indicatedMonth);
+        $secondLimitDate=static::getLastDayOfMonth($indicatedMonth);
         $categoryId=FinancialMovement::getCategoryOrMethodIdByName($name,static::getUserTableWithExpensesCategory());
         $sql="SELECT SUM(amount) AS summary from expenses WHERE expense_category_assigned_to_user_id='".$categoryId."' AND date_of_expense>= '".$firstLimitDate."' AND date_of_expense<= '".$secondLimitDate."'";
         $db=static::getDB();
