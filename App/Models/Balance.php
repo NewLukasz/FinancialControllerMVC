@@ -101,6 +101,14 @@ class Balance extends \Core\Model
         return date('Y-m-d', strtotime('first day of last month',strtotime($date)));
     }
 
+    protected static function getFirstDayOfMonth($date){
+        return date('Y-m-d',strtotime('first day of this month',strtotime($date)));
+    }
+
+    protected static function getLastDayOfMonth($date){
+        return date('Y-m-d',strtotime('last day of this month',strtotime($date)));
+    }
+
     public static function getTodaysDate(){
         $dateWithFirstDayOfCurrentMounth=date("Y-m-1");
 	    $d= new DateTime($dateWithFirstDayOfCurrentMounth);
@@ -231,6 +239,10 @@ class Balance extends \Core\Model
 
     public static function countValueOfExpensesForOneCategoryFromIndicatedMonth($name,$indicatedMonth){
         echo $indicatedMonth;
+        echo "<br>";
+        echo static::getFirstDayOfMonth($indicatedMonth);
+        echo "<br>";
+        echo static::getLastDayOfMonth($indicatedMonth);
         $firstLimitDate=static::getTodaysDate()[0];
         $secondLimitDate=static::getTodaysDate()[1];
         $categoryId=FinancialMovement::getCategoryOrMethodIdByName($name,static::getUserTableWithExpensesCategory());
