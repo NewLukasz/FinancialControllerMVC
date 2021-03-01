@@ -19,6 +19,14 @@
       showLimitDifference();
     });
 
+    $("#datePickerSession").on('change',function(){
+      showLimitDifference();
+    });
+
+    $("#datePicker").on('change',function(){
+      showLimitDifference();
+    });
+
     function showLimitDifference(){
       var insertedAmount=$("#amount").val();
       var choosenCategory=$("#expenseCategory").val();
