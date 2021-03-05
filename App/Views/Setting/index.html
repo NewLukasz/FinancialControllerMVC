@@ -216,8 +216,7 @@
             <h1 class="text-center">
               Warning
             </h1>
-            Category will be deleted permanently and items which has align this category will be unreachable. 
-            Please be sure that you won't lost any data after deletion!
+            Category will be deleted permanently and items which has align this category will be reachable at Another category. 
             <h4 class="text-center mt-5">
               After click "Delete permanently" button there no possibility to get back.
             </h4>
@@ -269,10 +268,12 @@
               <div class="btn-group-vertical mr-2  w-100" role="group" aria-label="First group">
                 {%for incomeCategoriesName in setting.incomeCategoriesNames %}
                 <div class="mx-auto">
-                  {{incomeCategoriesName}}     
-                  <button type="button" value="{{incomeCategoriesName}}" data-value="income" class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editIncomeCategoryOrPaymentMethod"><i class="icon-pencil-squared">Edit</i></button>
-                  <button type="button" value="{{incomeCategoriesName}}" data-value="income" class="edit btn-categories deleteButton" style="size:15px;" data-toggle="modal" data-target="#deleteModal"><i class="icon-trash">Delete</i></button>
-                </div>
+                  {%if incomeCategoriesName!='Another'%} 
+                  {{incomeCategoriesName}}
+                    <button type="button" value="{{incomeCategoriesName}}" data-value="income" class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editIncomeCategoryOrPaymentMethod"><i class="icon-pencil-squared">Edit</i></button>
+                    <button type="button" value="{{incomeCategoriesName}}" data-value="income" class="edit btn-categories deleteButton" style="size:15px;" data-toggle="modal" data-target="#deleteModal"><i class="icon-trash">Delete</i></button>
+                  </div>
+                    {%endif%}
                 {%endfor%}
                 <div class="mx-auto">
                   <button type="button" class="btn btn-success add" data-toggle="modal" value="income" data-target="#addNewCategoryOrPaymentMethodModal">Add new income category</button>
@@ -296,6 +297,7 @@
             <div class="btn-group-vertical mr-2  w-100" role="group" aria-label="First group">
               {%for expense in setting.expenseCategoriesNamesAndLimits %}
               <div class="mx-auto">
+                {%if expense.name!='Another'%} 
                   {{expense.name}} 
                   {% if expense.limit!=0 %} 
                     <label style="font-size:15px;">(Current limit: {{expense.limit}})</label>  
@@ -304,7 +306,7 @@
                     <button type="button" value="{{expense.name}}" class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editExpenseCategory"><i class="icon-pencil-squared"></i>Edit</i></button>
                   {%endif%}
                   <button type="button" value="{{expense.name}}" data-value="expense" class="edit btn-categories deleteButton" style="size:15px;" data-toggle="modal" data-target="#deleteModal"><i class="icon-trash">Delete</i></button>
-                  
+                  {%endif%}
               </div>
               {%endfor%}
               <div class="mx-auto">
@@ -325,9 +327,11 @@
           <div class="card-body">
             {%for paymentMethodName in setting.paymentMethodsNames %}
             <div class="mx-auto">
+              {%if paymentMethodName!='Another'%} 
               {{paymentMethodName}}     
               <button type="button" value="{{paymentMethodName}}" data-value="method"  class="edit btn-categories" style="size:15px;" data-toggle="modal" data-target="#editIncomeCategoryOrPaymentMethod"><i class="icon-pencil-squared">Edit</i></button>
               <button type="button" value="{{paymentMethodName}}"  data-value="method" class="edit btn-categories deleteButton" style="size:15px;" data-toggle="modal" data-target="#deleteModal"><i class="icon-trash">Delete</i></button>
+              {%endif%}
             </div>
             {%endfor%}
             <button type="button" class="btn btn-success add" data-toggle="modal" value="method" data-target="#addNewCategoryOrPaymentMethodModal">Add new payment method</button>
