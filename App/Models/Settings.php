@@ -139,13 +139,49 @@ class Settings extends \Core\Model{
     public static function deleteCategoryOrPaymentMethod(){
         if(isset($_POST['whatToDelete'])){
             $tableWithCategories=static::getCorrectTableToInsertData($_POST['whatToDelete']);
-            $id=FinancialMovement::getCategoryOrMethodIdByName($_POST['categoryOrMethodNameToDelete'], $tableWithCategories);
-            $sql="DELETE FROM ".$tableWithCategories." WHERE id='".$id."'";
+            $idOfCategoryToDelete=FinancialMovement::getCategoryOrMethodIdByName($_POST['categoryOrMethodNameToDelete'], $tableWithCategories);
+            $idOfAnotherCategory=FinancialMovement::getCategoryOrMethodIdByName('Another', $tableWithCategories);
+            static::changeDeletedCategoryToTheAnotherCategory($idOfCategoryToDelete,$idOfAnotherCategory,$_POST['whatToDelete']);
+            $sql="DELETE FROM ".$tableWithCategories." WHERE id='".$idOfCategoryToDelete."'";
             $db=static::getDB();
             $stmt=$db->prepare($sql);
             $stmt->execute();
             return true;
         }
+    }
+
+    protected static function changeDeletedCategoryToTheAnotherCategory($idOfDeletedCategory, $idOfAnotherCategory,$stringWhichDefineTable){
+        if($stringWhichDefineTable=='incomeCategory'){
+            static::changeDeletedCategoryToAnotherCategoryInCaseOfIncomes($idOfDeletedCategory, $idOfAnotherCategory);
+        }else if($stringWhichDefineTable=='expenseCategory'){
+            static::changeDeletedCategoryToAnotherCategoryInCaseOfExpensesCategory($idOfDeletedCategory, $idOfAnotherCategory);
+        }else if($stringWhichDefineTable=='paymentMethod'){
+            static::changeDeletedCategoryToAnotherCategoryInCaseOfExpensesMethod($idOfDeletedCategory, $idOfAnotherCategory);
+        }
+    }
+
+    protected static function changeDeletedCategoryToAnotherCategoryInCaseOfIncomes($idOfDeletedCategory, $idOfAnotherCategory){
+        $tableWithData=static::getTableWithIncomes();
+        $sql="UPDATE ".$tableWithData." SET income_category_assigned_to_user_id='".$idOfAnotherCategory."' WHERE income_category_assigned_to_user_id='".$idOfDeletedCategory."'";
+        $db=static::getDB();
+        $stmt=$db->prepare($sql);
+        $stmt->execute();
+    }
+
+    protected static function changeDeletedCategoryToAnotherCategoryInCaseOfExpensesCategory($idOfDeletedCategory, $idOfAnotherCategory){
+        $tableWithData=static::getTableWithExpenses();
+        $sql="UPDATE ".$tableWithData." SET expense_category_assigned_to_user_id='".$idOfAnotherCategory."' WHERE expense_category_assigned_to_user_id='".$idOfDeletedCategory."'";
+        $db=static::getDB();
+        $stmt=$db->prepare($sql);
+        $stmt->execute();
+    }
+
+    protected static function changeDeletedCategoryToAnotherCategoryInCaseOfExpensesMethod($idOfDeletedCategory, $idOfAnotherCategory){
+        $tableWithData=static::getTableWithExpenses();
+        $sql="UPDATE ".$tableWithData." SET payment_method_assigned_to_user_id='".$idOfAnotherCategory."' WHERE payment_method_assigned_to_user_id='".$idOfDeletedCategory."'";
+        $db=static::getDB();
+        $stmt=$db->prepare($sql);
+        $stmt->execute();
     }
 
     protected static function getCorrectTableToInsertData($stringWhichDefineTable){

@@ -89,7 +89,7 @@ class Setting extends Authenticated
 
     public function deleteCategoryOrPaymentMethodAction(){
         if(Settings::deleteCategoryOrPaymentMethod()){
-            Flash::addMessage("Choosen item is deleted.",'warning');
+            Flash::addMessage("Category is deleted. Items which were aligned to deleted category is moved to another category.",'warning');
             $setting=new Settings($_POST);
             View::renderTemplate('Setting/index.html',[
                 'setting'=>$setting
