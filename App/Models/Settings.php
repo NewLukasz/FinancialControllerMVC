@@ -140,10 +140,7 @@ class Settings extends \Core\Model{
         if(isset($_POST['whatToDelete'])){
             $tableWithCategories=static::getCorrectTableToInsertData($_POST['whatToDelete']);
             $idOfCategoryToDelete=FinancialMovement::getCategoryOrMethodIdByName($_POST['categoryOrMethodNameToDelete'], $tableWithCategories);
-            echo "Określenie id another dla danego uzytkownika";
             $idOfAnotherCategory=FinancialMovement::getCategoryOrMethodIdByName('Another', $tableWithCategories);
-            echo $idOfAnotherCategory;
-            echo "Teraz funckja update dla rekordów z tabeli incomes";
             static::changeDeletedCategoryToTheAnotherCategory($idOfCategoryToDelete,$idOfAnotherCategory,$_POST['whatToDelete']);
             $sql="DELETE FROM ".$tableWithCategories." WHERE id='".$idOfCategoryToDelete."'";
             $db=static::getDB();
